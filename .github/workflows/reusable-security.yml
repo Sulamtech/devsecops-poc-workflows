@@ -186,6 +186,30 @@ jobs:
           if [[ ! -f gitleaks-audit-results.json ]]; then
             printf '%s\n' "Gitleaks exception audit exited with code $status without producing JSON evidence." >> gitleaks-scanner-error.txt
           fi
+      - name: Scan complete trusted HEAD history for triage
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          "$RUNNER_TEMP/gitleaks" git \
+            --redact=100 \
+            --no-color \
+            --ignore-gitleaks-allow \
+            --gitleaks-ignore-path "$RUNNER_TEMP/trusted.gitleaksignore" \
+            --max-decode-depth 1 \
+            --max-archive-depth 1 \
+            --max-target-megabytes 0 \
+            --report-format json \
+            --report-path gitleaks-complete-results.json \
+            --exit-code 10 \
+            --log-opts="--no-merges $HEAD_COMMIT" \
+            .
+          status=$?
+          set -e
+          echo "GITLEAKS_COMPLETE_EXIT_CODE=$status" >> "$GITHUB_ENV"
+          if [[ ! -f gitleaks-complete-results.json ]]; then
+            printf '%s\n' "Gitleaks complete scan exited with code $status without producing JSON evidence." >> gitleaks-scanner-error.txt
+          fi
       - name: Classify Gitleaks result
         shell: bash
         env:
@@ -230,7 +254,10 @@ jobs:
           if [[ ! -f gitleaks-results.json ]] ||
              ! jq --exit-status 'type == "array"' gitleaks-results.json >/dev/null ||
              [[ ! -f gitleaks-audit-results.json ]] ||
-             ! jq --exit-status 'type == "array"' gitleaks-audit-results.json >/dev/null; then
+             ! jq --exit-status 'type == "array"' gitleaks-audit-results.json >/dev/null ||
+             [[ ! -f gitleaks-complete-results.json ]] ||
+             ! jq --exit-status 'type == "array"' gitleaks-complete-results.json >/dev/null ||
+             [[ "$GITLEAKS_COMPLETE_EXIT_CODE" != "0" && "$GITLEAKS_COMPLETE_EXIT_CODE" != "10" ]]; then
             {
               echo "### Gitleaks — \`SCANNER_ERROR\`"
               echo
@@ -358,6 +385,55 @@ jobs:
             echo "Consumer \`.gitleaksignore\` observed: **$CONSUMER_GITLEAKSIGNORE_PRESENT**."
           } >> "$GITHUB_STEP_SUMMARY"
           exit 10
+      - name: Normalize redacted Gitleaks evidence for triage
+        id: normalize_gitleaks
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -f gitleaks-complete-results.json && ! -s "$RUNNER_TEMP/gitleaks-policy-errors.txt" ]]
+          python3 - <<'PY'
+          import hashlib, json, re
+          from pathlib import Path
+
+          source = json.loads(Path("gitleaks-complete-results.json").read_text())
+          if not isinstance(source, list) or len(source) > 10_000:
+              raise SystemExit("invalid Gitleaks result collection")
+          findings = []
+          safe_rule = re.compile(r"^[A-Za-z0-9._:/-]{1,256}$")
+          for item in source:
+              if not isinstance(item, dict):
+                  raise SystemExit("invalid Gitleaks result")
+              rule = item.get("RuleID")
+              path = item.get("File")
+              line = item.get("StartLine")
+              if not isinstance(rule, str) or not safe_rule.fullmatch(rule):
+                  raise SystemExit("invalid Gitleaks rule ID")
+              if not isinstance(path, str) or not 1 <= len(path.strip()) <= 1024:
+                  raise SystemExit("invalid Gitleaks path")
+              if line is not None and (not isinstance(line, int) or isinstance(line, bool) or not 1 <= line <= 10_000_000):
+                  raise SystemExit("invalid Gitleaks line")
+              binding = f'{item.get("Fingerprint", "")}\0{rule}\0{path}\0{line or ""}'
+              finding = {
+                  "ruleId": rule,
+                  "path": path,
+                  "redactedFingerprint": hashlib.sha256(binding.encode()).hexdigest(),
+              }
+              if line is not None:
+                  finding["startLine"] = line
+              findings.append(finding)
+          document = {"schemaVersion": 1, "scanner": "gitleaks", "complete": True, "redacted": True, "findings": findings}
+          Path("gitleaks.json").write_text(json.dumps(document, separators=(",", ":")) + "\n")
+          PY
+      - name: Upload redacted Gitleaks evidence for triage
+        if: ${{ always() && steps.normalize_gitleaks.outcome == 'success' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: devsecops-gitleaks-redacted-v1
+          path: gitleaks.json
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 9
   semgrep:
     name: sast / semgrep-delta
     runs-on: ubuntu-24.04
@@ -617,6 +693,58 @@ jobs:
             echo "Detailed stack-specific remediation is included in each annotation and in the trusted policy metadata."
           } >> "$GITHUB_STEP_SUMMARY"
           exit 10
+      - name: Normalize complete Semgrep evidence for triage
+        id: normalize_semgrep
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          source = json.loads(Path("semgrep-full.json").read_text())
+          results = source.get("results") if isinstance(source, dict) else None
+          if not isinstance(results, list) or len(results) > 10_000:
+              raise SystemExit("invalid Semgrep result collection")
+          severity_map = {"ERROR": "high", "WARNING": "medium", "INFO": "low"}
+          findings = []
+          for item in results:
+              if not isinstance(item, dict):
+                  raise SystemExit("invalid Semgrep result")
+              extra = item.get("extra") if isinstance(item.get("extra"), dict) else {}
+              rule = item.get("check_id")
+              path = item.get("path")
+              line = (item.get("start") or {}).get("line") if isinstance(item.get("start"), dict) else None
+              title = extra.get("message") or rule
+              raw_severity = extra.get("severity", "WARNING")
+              severity = severity_map.get(raw_severity)
+              if not isinstance(rule, str) or not 1 <= len(rule.strip()) <= 256:
+                  raise SystemExit("invalid Semgrep rule ID")
+              if not isinstance(path, str) or not 1 <= len(path.strip()) <= 1024:
+                  raise SystemExit("invalid Semgrep path")
+              if not isinstance(title, str) or not 1 <= len(title.strip()) <= 512:
+                  raise SystemExit("invalid Semgrep title")
+              if severity is None:
+                  raise SystemExit("invalid Semgrep severity")
+              if line is not None and (not isinstance(line, int) or isinstance(line, bool) or not 1 <= line <= 10_000_000):
+                  raise SystemExit("invalid Semgrep line")
+              finding = {"ruleId": rule, "path": path, "title": title, "severity": severity, "exploitable": raw_severity == "ERROR"}
+              if line is not None:
+                  finding["startLine"] = line
+              findings.append(finding)
+          document = {"schemaVersion": 1, "scanner": "semgrep", "complete": True, "findings": findings}
+          Path("semgrep.json").write_text(json.dumps(document, separators=(",", ":")) + "\n")
+          PY
+      - name: Upload Semgrep evidence for triage
+        if: ${{ always() && steps.normalize_semgrep.outcome == 'success' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: devsecops-semgrep-v1
+          path: semgrep.json
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 9
   dependencies:
     name: sca / trivy-filesystem-delta
     runs-on: ubuntu-24.04
@@ -1018,6 +1146,66 @@ jobs:
             done < <(jq -r '.missing_manifests[]' trivy-fs-integrity.json)
           fi
           exit "$exit_code"
+      - name: Normalize complete Trivy filesystem evidence for triage
+        id: normalize_trivy
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          source = json.loads(Path("trivy-fs-head.json").read_text())
+          kev = json.loads(Path("trivy-fs-kev.json").read_text())
+          results = source.get("Results") if isinstance(source, dict) else None
+          kev_ids = set(kev.get("cves", [])) if isinstance(kev, dict) else set()
+          if not isinstance(results, list):
+              raise SystemExit("invalid Trivy result collection")
+          findings = []
+          for result in results:
+              if not isinstance(result, dict):
+                  raise SystemExit("invalid Trivy result")
+              target = result.get("Target")
+              vulnerabilities = result.get("Vulnerabilities") or []
+              if not isinstance(target, str) or not 1 <= len(target.strip()) <= 512 or not isinstance(vulnerabilities, list):
+                  raise SystemExit("invalid Trivy target")
+              for item in vulnerabilities:
+                  if not isinstance(item, dict):
+                      raise SystemExit("invalid Trivy vulnerability")
+                  vulnerability = item.get("VulnerabilityID")
+                  package = item.get("PkgName")
+                  installed = item.get("InstalledVersion")
+                  title = item.get("Title") or vulnerability
+                  severity = str(item.get("Severity", "")).lower()
+                  values = (vulnerability, package, installed, title)
+                  if any(not isinstance(value, str) or not 1 <= len(value.strip()) <= (256 if index == 0 else 512) for index, value in enumerate(values)):
+                      raise SystemExit("invalid Trivy vulnerability fields")
+                  if severity not in {"critical", "high", "medium", "low"}:
+                      raise SystemExit("invalid Trivy severity")
+                  findings.append({
+                      "vulnerabilityId": vulnerability,
+                      "packageName": package,
+                      "installedVersion": installed,
+                      "target": target,
+                      "title": title,
+                      "severity": severity,
+                      "exploitable": vulnerability in kev_ids,
+                  })
+                  if len(findings) > 10_000:
+                      raise SystemExit("too many Trivy findings")
+          document = {"schemaVersion": 1, "scanner": "trivy", "complete": True, "findings": findings}
+          Path("trivy.json").write_text(json.dumps(document, separators=(",", ":")) + "\n")
+          PY
+      - name: Upload Trivy filesystem evidence for triage
+        if: ${{ always() && steps.normalize_trivy.outcome == 'success' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: devsecops-trivy-v1
+          path: trivy.json
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 9
   container:
     name: container / trivy-image-delta
     # A pull request never builds a temporary image. The real candidate is built only after merge.
