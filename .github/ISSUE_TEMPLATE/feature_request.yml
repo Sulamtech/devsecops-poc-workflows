@@ -1,0 +1,29 @@
+name: Feature request
+about: Propose a bounded improvement to the public laboratory
+labels: ["enhancement", "status:needs-review"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and found no duplicate.
+          required: true
+        - label: I understand implementation starts only after status:approved.
+          required: true
+  - type: textarea
+    attributes:
+      label: Problem
+      description: Explain the problem without company code, data, or credentials.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Acceptance and rollback
+      description: Define evidence, blast radius, and rollback for a <=3h slice.
+    validations:
+      required: true

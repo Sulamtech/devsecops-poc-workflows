@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security disclosure
+    url: https://github.com/Sulamtech/devsecops-poc-workflows/security/policy
+    about: Do not disclose a real secret or vulnerability in a public issue.
