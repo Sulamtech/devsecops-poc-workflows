@@ -1020,6 +1020,8 @@ jobs:
           exit "$exit_code"
   container:
     name: container / trivy-image-delta
+    # A pull request never builds a temporary image. The real candidate is built only after merge.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     permissions:
