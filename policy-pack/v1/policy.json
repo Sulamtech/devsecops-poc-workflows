@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "1.0.0",
+  "enforcement_scope": "job_conclusion_only",
+  "taxonomy": {
+    "PASS": { "exit_code": 0, "pr_outcome": "green", "publish_allowed": true },
+    "WARN": { "exit_code": 0, "pr_outcome": "green", "publish_allowed": true },
+    "BLOCK": { "exit_code": 10, "pr_outcome": "red", "publish_allowed": false },
+    "POLICY_ERROR": { "exit_code": 20, "pr_outcome": "red", "publish_allowed": false },
+    "SCANNER_ERROR": { "exit_code": 30, "pr_outcome": "red", "publish_allowed": false }
+  },
+  "precedence": ["POLICY_ERROR", "SCANNER_ERROR", "BLOCK", "WARN", "PASS"]
+}

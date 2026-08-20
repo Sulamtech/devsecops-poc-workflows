@@ -1,0 +1,37 @@
+name: validate-policy-pack
+
+on:
+  pull_request:
+    paths:
+      - "policy-pack/**"
+      - "scripts/validate_policy_pack.py"
+      - "docs/KAN-118-adversarial-test-plan.md"
+      - ".github/workflows/validate-policy-pack.yml"
+  push:
+    branches: [main]
+    paths:
+      - "policy-pack/**"
+      - "scripts/validate_policy_pack.py"
+      - "docs/KAN-118-adversarial-test-plan.md"
+      - ".github/workflows/validate-policy-pack.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: policy pack contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout policy pack
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate schema, fixtures and taxonomy
+        shell: bash
+        run: python3 scripts/validate_policy_pack.py

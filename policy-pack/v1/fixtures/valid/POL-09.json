@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "POL-09",
+  "title": "Scanner timeout is not reported as a vulnerability",
+  "category": "policy",
+  "observed": { "policy_status": "valid", "scanner_status": "timeout", "origin": "none", "risk_type": "none", "severity": "none", "confidence": "none", "exploitable": false, "fix_available": false, "bypass_attempt": false },
+  "expected": { "decision": "SCANNER_ERROR", "exit_code": 30, "pr_outcome": "red", "publish_allowed": false, "reason_code": "SCANNER_UNAVAILABLE" },
+  "evidence": { "redacted": true, "required_fields": ["case_id", "workflow_sha", "scanner_version", "decision", "reason", "remediation"] }
+}

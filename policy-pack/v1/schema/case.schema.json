@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/devsecops-policy-pack/v1/case.schema.json",
+  "title": "KAN-118 adversarial policy case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "category", "observed", "expected", "evidence"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^[A-Z]{2,3}-[0-9]{2}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "category": { "enum": ["policy", "integrity", "gitleaks", "semgrep", "trivy-filesystem", "trivy-image", "developer-experience"] },
+    "observed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_status", "scanner_status", "origin", "risk_type", "severity", "confidence", "exploitable", "fix_available", "bypass_attempt"],
+      "properties": {
+        "policy_status": { "enum": ["valid", "invalid", "expired", "corrupt"] },
+        "scanner_status": { "enum": ["ok", "timeout", "outage", "internal_error"] },
+        "origin": { "enum": ["none", "baseline", "introduced"] },
+        "risk_type": { "enum": ["none", "vulnerability", "injection", "secret", "provenance"] },
+        "severity": { "enum": ["none", "low", "medium", "high", "critical"] },
+        "confidence": { "enum": ["none", "low", "high"] },
+        "exploitable": { "type": "boolean" },
+        "fix_available": { "type": "boolean" },
+        "bypass_attempt": { "type": "boolean" }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "exit_code", "pr_outcome", "publish_allowed", "reason_code"],
+      "properties": {
+        "decision": { "enum": ["PASS", "WARN", "BLOCK", "POLICY_ERROR", "SCANNER_ERROR"] },
+        "exit_code": { "enum": [0, 10, 20, 30] },
+        "pr_outcome": { "enum": ["green", "red"] },
+        "publish_allowed": { "type": "boolean" },
+        "reason_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]+$" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["redacted", "required_fields"],
+      "properties": {
+        "redacted": { "const": true },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["case_id", "repository", "base_sha", "head_sha", "workflow_sha", "scanner_version", "decision", "reason", "remediation"] }
+        }
+      }
+    }
+  }
+}

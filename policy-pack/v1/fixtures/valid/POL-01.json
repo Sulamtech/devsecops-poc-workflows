@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "POL-01",
+  "title": "Inherited debt remains visible without blocking",
+  "category": "policy",
+  "observed": { "policy_status": "valid", "scanner_status": "ok", "origin": "baseline", "risk_type": "vulnerability", "severity": "high", "confidence": "high", "exploitable": true, "fix_available": true, "bypass_attempt": false },
+  "expected": { "decision": "WARN", "exit_code": 0, "pr_outcome": "green", "publish_allowed": true, "reason_code": "BASELINE_DEBT" },
+  "evidence": { "redacted": true, "required_fields": ["case_id", "base_sha", "head_sha", "decision", "reason", "remediation"] }
+}

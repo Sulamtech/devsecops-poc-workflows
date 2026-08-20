@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "INT-03",
+  "title": "Attempted gate bypass blocks",
+  "category": "integrity",
+  "observed": { "policy_status": "valid", "scanner_status": "ok", "origin": "introduced", "risk_type": "none", "severity": "none", "confidence": "high", "exploitable": false, "fix_available": false, "bypass_attempt": true },
+  "expected": { "decision": "BLOCK", "exit_code": 10, "pr_outcome": "red", "publish_allowed": false, "reason_code": "CONTROL_BYPASS" },
+  "evidence": { "redacted": true, "required_fields": ["case_id", "repository", "base_sha", "head_sha", "workflow_sha", "decision", "reason", "remediation"] }
+}

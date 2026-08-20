@@ -1,0 +1,14 @@
+name: safe
+on: [pull_request]
+permissions:
+  contents: read
+jobs:
+  integrity:
+    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-caller-integrity.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  security:
+    needs: integrity
+    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-security.yml@e81bb14dbdcac024b92d524ad3ee7edcdae354d8
+  metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

@@ -1,0 +1,232 @@
+name: reusable-image-publish-contract
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: Artifact containing the exact image evaluated by the security workflow
+        required: true
+        type: string
+      expected-image-id:
+        description: Immutable Docker image ID evaluated by Trivy
+        required: true
+        type: string
+      expected-archive-sha256:
+        description: SHA-256 of the exported Docker archive
+        required: true
+        type: string
+      expected-subject-commit:
+        description: Commit represented by the scanned image
+        required: true
+        type: string
+      poc-substitute-after-push:
+        description: PoC-only fault injection that replaces the published subject
+        required: false
+        default: false
+        type: boolean
+
+permissions: {}
+
+jobs:
+  publish-contract:
+    name: Verify and publish exact scanned image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+    services:
+      registry:
+        image: registry:2.8.3@sha256:46faa9a1ae6813194b53921a370f2f4f8c5e1aae228a89bceafef5847a6a3278
+        ports:
+          - 5000:5000
+    steps:
+      - name: Download exact scanned image candidate
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release-candidate
+      - name: Verify candidate integrity and load image
+        id: verify_candidate
+        shell: bash
+        env:
+          EXPECTED_IMAGE_ID: ${{ inputs.expected-image-id }}
+          EXPECTED_ARCHIVE_SHA256: ${{ inputs.expected-archive-sha256 }}
+          EXPECTED_SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+        run: |
+          set -euo pipefail
+
+          archive="release-candidate/trivy-image-candidate.tar"
+          manifest="release-candidate/trivy-image-subject.json"
+
+          [[ "$EXPECTED_IMAGE_ID" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+            echo "::error title=Publish contract POLICY_ERROR::The expected image ID is not a valid immutable sha256 identifier."
+            exit 20
+          }
+          [[ "$EXPECTED_ARCHIVE_SHA256" =~ ^[0-9a-f]{64}$ ]] || {
+            echo "::error title=Publish contract POLICY_ERROR::The expected archive digest is not a valid sha256 value."
+            exit 20
+          }
+          [[ "$EXPECTED_SUBJECT_COMMIT" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "::error title=Publish contract POLICY_ERROR::The expected subject commit is not a full Git SHA."
+            exit 20
+          }
+          [[ -s "$archive" && -s "$manifest" ]] || {
+            echo "::error title=Publish contract SCANNER_ERROR::The candidate artifact is incomplete. Retry the workflow before publishing."
+            exit 30
+          }
+          jq -e . "$manifest" >/dev/null || {
+            echo "::error title=Publish contract SCANNER_ERROR::The candidate manifest is not valid JSON."
+            exit 30
+          }
+
+          manifest_image_id="$(jq -er '.image_id' "$manifest")"
+          manifest_archive_sha256="$(jq -er '.archive_sha256' "$manifest")"
+          manifest_subject_commit="$(jq -er '.subject_commit' "$manifest")"
+          candidate_tag="$(jq -er '.candidate_tag' "$manifest")"
+          image_name="$(jq -er '.image_name' "$manifest")"
+          actual_archive_sha256="$(sha256sum "$archive" | cut -d ' ' -f1)"
+
+          [[ "$manifest_image_id" == "$EXPECTED_IMAGE_ID" ]] || {
+            echo "::error title=Publish contract BLOCK::The artifact manifest references image ${manifest_image_id}, but security approved ${EXPECTED_IMAGE_ID}."
+            exit 10
+          }
+          [[ "$manifest_archive_sha256" == "$EXPECTED_ARCHIVE_SHA256" &&
+             "$actual_archive_sha256" == "$EXPECTED_ARCHIVE_SHA256" ]] || {
+            echo "::error title=Publish contract BLOCK::The candidate archive digest changed after the security scan."
+            exit 10
+          }
+          [[ "$manifest_subject_commit" == "$EXPECTED_SUBJECT_COMMIT" ]] || {
+            echo "::error title=Publish contract BLOCK::The candidate belongs to commit ${manifest_subject_commit}, not approved commit ${EXPECTED_SUBJECT_COMMIT}."
+            exit 10
+          }
+          [[ "$candidate_tag" == "${image_name}:candidate-${EXPECTED_SUBJECT_COMMIT}" ]] || {
+            echo "::error title=Publish contract BLOCK::The candidate tag does not bind the image name to the approved commit."
+            exit 10
+          }
+          [[ "$image_name" =~ ^[a-z0-9]+([._/-][a-z0-9]+)*$ ]] || {
+            echo "::error title=Publish contract POLICY_ERROR::The candidate image name is not a safe OCI repository path."
+            exit 20
+          }
+
+          docker load --input "$archive" > docker-load.log
+          loaded_image_id="$(docker image inspect "$candidate_tag" --format '{{.Id}}')"
+          [[ "$loaded_image_id" == "$EXPECTED_IMAGE_ID" ]] || {
+            echo "::error title=Publish contract BLOCK::The loaded archive produced ${loaded_image_id}, not the image approved by security."
+            exit 10
+          }
+
+          registry_ref="localhost:5000/${image_name}:candidate-${EXPECTED_SUBJECT_COMMIT}"
+          docker tag "$loaded_image_id" "$registry_ref"
+          echo "registry_ref=$registry_ref" >> "$GITHUB_OUTPUT"
+          echo "image_name=$image_name" >> "$GITHUB_OUTPUT"
+      - name: Publish candidate to ephemeral registry
+        id: publish_candidate
+        shell: bash
+        env:
+          REGISTRY_REF: ${{ steps.verify_candidate.outputs.registry_ref }}
+        run: |
+          set -euo pipefail
+          docker push "$REGISTRY_REF" | tee docker-push.log
+          registry_digest="$(awk '/digest: sha256:/ {print $3}' docker-push.log | tail -n 1)"
+          [[ "$registry_digest" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+            echo "::error title=Publish contract SCANNER_ERROR::The registry did not return an immutable digest."
+            exit 30
+          }
+          echo "registry_digest=$registry_digest" >> "$GITHUB_OUTPUT"
+      - name: PoC fault — replace published subject
+        if: inputs.poc-substitute-after-push
+        shell: bash
+        env:
+          REGISTRY_REF: ${{ steps.verify_candidate.outputs.registry_ref }}
+        run: |
+          set -euo pipefail
+          docker pull busybox:1.35.0@sha256:584c3aa5ea2787155c186d156a85c380db220a8c886c01aac511b99880290010
+          substitute_image_id="$(docker image inspect busybox:1.35.0@sha256:584c3aa5ea2787155c186d156a85c380db220a8c886c01aac511b99880290010 --format '{{.Id}}')"
+          docker tag "$substitute_image_id" "$REGISTRY_REF"
+          docker push "$REGISTRY_REF" | tee docker-substitution.log
+      - name: Verify published subject
+        id: verify_published
+        shell: bash
+        env:
+          EXPECTED_IMAGE_ID: ${{ inputs.expected-image-id }}
+          EXPECTED_SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+          REGISTRY_REF: ${{ steps.verify_candidate.outputs.registry_ref }}
+          INITIAL_REGISTRY_DIGEST: ${{ steps.publish_candidate.outputs.registry_digest }}
+        run: |
+          set -euo pipefail
+          docker image rm "$REGISTRY_REF" >/dev/null 2>&1 || true
+          docker pull "$REGISTRY_REF" | tee docker-pull.log
+
+          published_image_id="$(docker image inspect "$REGISTRY_REF" --format '{{.Id}}')"
+          published_registry_digest="$(docker image inspect "$REGISTRY_REF" --format '{{index .RepoDigests 0}}' | cut -d '@' -f2)"
+          decision=PASS
+          reason="The image pulled from the registry is exactly the image approved by Trivy."
+          exit_code=0
+
+          if [[ "$published_image_id" != "$EXPECTED_IMAGE_ID" ]]; then
+            decision=BLOCK
+            reason="Registry subject mismatch: security approved ${EXPECTED_IMAGE_ID}, but publish resolved to ${published_image_id}."
+            exit_code=10
+          fi
+
+          jq -n \
+            --arg decision "$decision" \
+            --arg reason "$reason" \
+            --arg subject_commit "$EXPECTED_SUBJECT_COMMIT" \
+            --arg expected_image_id "$EXPECTED_IMAGE_ID" \
+            --arg published_image_id "$published_image_id" \
+            --arg initial_registry_digest "$INITIAL_REGISTRY_DIGEST" \
+            --arg published_registry_digest "$published_registry_digest" \
+            '{
+              schema_version: "1.0.0",
+              decision: $decision,
+              reason: $reason,
+              subject_commit: $subject_commit,
+              expected_image_id: $expected_image_id,
+              published_image_id: $published_image_id,
+              initial_registry_digest: $initial_registry_digest,
+              published_registry_digest: $published_registry_digest,
+              remediation: (
+                if $decision == "BLOCK"
+                then "Do not deploy. Publish the exact archived image produced by the security job; never rebuild or retag another subject after scanning."
+                else null
+                end
+              )
+            }' > trivy-image-publish-decision.json
+
+          {
+            echo "### Trivy image publish contract — \`${decision}\`"
+            echo
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| Commit | \`${EXPECTED_SUBJECT_COMMIT}\` |"
+            echo "| Approved image ID | \`${EXPECTED_IMAGE_ID}\` |"
+            echo "| Published image ID | \`${published_image_id}\` |"
+            echo "| Registry digest | \`${published_registry_digest}\` |"
+            echo
+            echo "$reason"
+            if [[ "$decision" == "BLOCK" ]]; then
+              echo
+              echo "**How to fix:** publish the archived image emitted by the security job. Do not rebuild or replace the tag between scan and publish."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if (( exit_code != 0 )); then
+            echo "::error title=Trivy image publish BLOCK::${reason} Do not deploy; publish the exact archived image produced by the security job."
+            exit "$exit_code"
+          fi
+      - name: Preserve publish-contract evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: trivy-image-publish-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            release-candidate/trivy-image-subject.json
+            trivy-image-publish-decision.json
+            docker-load.log
+            docker-push.log
+            docker-substitution.log
+            docker-pull.log
+          if-no-files-found: warn
+          retention-days: 7

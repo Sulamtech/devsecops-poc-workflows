@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0.0",
+  "cases": [
+    {
+      "id": "INT-01",
+      "title": "Required security job removed from caller",
+      "check": "required_job",
+      "snapshot": { "actual": ["test", "build"], "required": "security" },
+      "expected": { "decision": "BLOCK", "reason_code": "REQUIRED_JOB_MISSING" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": true }
+    },
+    {
+      "id": "INT-02",
+      "title": "Mutable central workflow reference",
+      "check": "approved_ref",
+      "snapshot": { "actual": "main", "required": ["0f6c358000000000000000000000000000000000"] },
+      "expected": { "decision": "BLOCK", "reason_code": "WORKFLOW_REF_NOT_APPROVED" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-03",
+      "title": "Caller neutralizes failure",
+      "check": "must_be_false",
+      "snapshot": { "actual": true, "required": false },
+      "expected": { "decision": "BLOCK", "reason_code": "CONTROL_BYPASS" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-04",
+      "title": "Caller requests unnecessary write permission",
+      "check": "permissions_subset",
+      "snapshot": { "actual": ["contents:read", "packages:write"], "required": ["contents:read"] },
+      "expected": { "decision": "BLOCK", "reason_code": "EXCESSIVE_PERMISSIONS" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-05",
+      "title": "Pull request trigger removed",
+      "check": "trigger_present",
+      "snapshot": { "actual": ["push"], "required": "pull_request" },
+      "expected": { "decision": "BLOCK", "reason_code": "REQUIRED_TRIGGER_MISSING" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": true }
+    },
+    {
+      "id": "INT-06",
+      "title": "Skip CI attempts to omit required checks",
+      "check": "must_be_false",
+      "snapshot": { "actual": true, "required": false },
+      "expected": { "decision": "BLOCK", "reason_code": "CONTROL_BYPASS" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": true }
+    },
+    {
+      "id": "INT-07",
+      "title": "Baseline read from untrusted head",
+      "check": "trusted_source",
+      "snapshot": { "actual": "head", "required": "base" },
+      "expected": { "decision": "BLOCK", "reason_code": "UNTRUSTED_BASELINE" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-08",
+      "title": "Consumer attempts to replace central policy",
+      "check": "trusted_source",
+      "snapshot": { "actual": "consumer", "required": "central" },
+      "expected": { "decision": "BLOCK", "reason_code": "UNTRUSTED_POLICY" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-09",
+      "title": "Required scanner artifact is missing",
+      "check": "artifact_status",
+      "snapshot": { "actual": "missing", "required": "valid" },
+      "expected": { "decision": "POLICY_ERROR", "reason_code": "ARTIFACT_INVALID" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-10",
+      "title": "Artifact is bound to another commit",
+      "check": "artifact_binding",
+      "snapshot": { "actual": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "required": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+      "expected": { "decision": "BLOCK", "reason_code": "ARTIFACT_BINDING_MISMATCH" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-11",
+      "title": "Rollback selects an unapproved workflow SHA",
+      "check": "approved_ref",
+      "snapshot": { "actual": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "required": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"] },
+      "expected": { "decision": "BLOCK", "reason_code": "WORKFLOW_REF_NOT_APPROVED" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": true }
+    },
+    {
+      "id": "INT-12",
+      "title": "Same policy SHA produces a different rule count",
+      "check": "reproducible_value",
+      "snapshot": { "actual": 41, "required": 42 },
+      "expected": { "decision": "POLICY_ERROR", "reason_code": "POLICY_NOT_REPRODUCIBLE" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": false }
+    },
+    {
+      "id": "INT-13",
+      "title": "Action runtime is outside the supported set",
+      "check": "runtime_compatibility",
+      "snapshot": { "actual": "node20", "required": ["node24"] },
+      "expected": { "decision": "SCANNER_ERROR", "reason_code": "ACTION_RUNTIME_UNSUPPORTED" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": true }
+    },
+    {
+      "id": "INT-14",
+      "title": "Fork uses read-only token and no secrets",
+      "check": "fork_permissions",
+      "snapshot": { "actual": { "permissions": ["contents:read"], "secrets_available": false }, "required": { "permissions": ["contents:read"], "secrets_available": false } },
+      "expected": { "decision": "PASS", "reason_code": "FORK_LEAST_PRIVILEGE" },
+      "limits": { "validation_scope": "contract_snapshot", "platform_evidence_required": true }
+    }
+  ]
+}

@@ -1,0 +1,3696 @@
+{
+  "schema_version": "1.0.0",
+  "plan_document": "docs/KAN-118-adversarial-test-plan.md",
+  "cases": [
+    {
+      "id": "POL-01",
+      "title": "Deuda heredada sin cambios",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/POL-01.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "POL-02",
+      "title": "Finding Medium nuevo de baja confianza",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/POL-02.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "POL-03",
+      "title": "High nuevo pero no aplicable al runtime",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/22"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30134884462",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30134884462/job/89616667317",
+          "commit_sha": "15302d3af2f3ed2cc82c04396fe34782e2581ba5",
+          "workflow_sha": "fa652512180569b1561865cf418752812862e04f",
+          "expected_state": "WARN — High xlsx findings are not applicable to the runtime path under trusted VEX with product, justification, owner and expiry visible",
+          "actual_state": "WARN — High xlsx findings are not applicable to the runtime path under trusted VEX with product, justification, owner and expiry visible",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "POL-04",
+      "title": "High/Critical nuevo, aplicable y con fix",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/POL-04.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "POL-05",
+      "title": "Inyección source-to-sink de alta confianza",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-quarkus/pull/4"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29882822326",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29882822326/job/88807125000",
+          "commit_sha": "dda055edcdb2f55278a07b72f6fbf6c83a3ed78a",
+          "workflow_sha": "e81bb14dbdcac024b92d524ad3ee7edcdae354d8",
+          "expected_state": "BLOCK — JAX-RS query parameter reaches Runtime.exec; CWE-78 and remediation visible",
+          "actual_state": "BLOCK — JAX-RS query parameter reaches Runtime.exec; CWE-78 and remediation visible",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8515414521"
+        }
+      ]
+    },
+    {
+      "id": "POL-06",
+      "title": "Sink peligroso con input constante/allowlist",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/POL-06.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "POL-07",
+      "title": "Excepción aprobada y vigente desde base confiable",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/27"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30135092077",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30135092077/job/89617252205",
+          "commit_sha": "c75c78373c859ed261f0cd30b0494da9b2a65016",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "WARN — two fictitious findings match active trusted-base fingerprints; owner, expiry and reason are visible",
+          "actual_state": "WARN — two fictitious findings match active trusted-base fingerprints; owner, expiry and reason are visible",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "POL-08",
+      "title": "Excepción expirada",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/POL-08.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "POL-09",
+      "title": "Scanner outage en PR sin publish",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/POL-09.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "POL-10",
+      "title": "Scanner outage antes de publish/deploy",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz A — Política y Shape Up",
+        "case_id": "POL-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": ".github/workflows/reusable-security.yml"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130800861",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130800861/job/89604649172",
+          "commit_sha": "4746be14fee425be331b8c9eec9ce45425bae0b6",
+          "workflow_sha": "d2c5b32808c479766a5e5826c74c9ee5d7bf1cca",
+          "expected_state": "SCANNER_ERROR; publish skipped; ArgoCD revision and deployed digest unchanged",
+          "actual_state": "SCANNER_ERROR; publish skipped; ArgoCD revision and deployed digest unchanged",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "INT-01",
+      "title": "Eliminar el job `security` del caller",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038026",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038026/job/89617079927",
+          "commit_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "workflow_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "expected_state": "UNSUPPORTED — required security job cannot be enforced on this private GitHub Free repository; rulesets and branch protection APIs return 403",
+          "actual_state": "UNSUPPORTED — required security job cannot be enforced on this private GitHub Free repository; rulesets and branch protection APIs return 403",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "unsupported"
+        }
+      ]
+    },
+    {
+      "id": "INT-02",
+      "title": "Cambiar el SHA central por tag, branch o SHA no aprobado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-03",
+      "title": "Añadir `continue-on-error` al caller",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-04",
+      "title": "Cambiar `permissions` a escritura innecesaria",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-05",
+      "title": "Cambiar trigger para que el PR no ejecute",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038026",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038026/job/89617079927",
+          "commit_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "workflow_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "expected_state": "UNSUPPORTED — required pull_request trigger/check cannot be enforced on this private GitHub Free repository; APIs return 403",
+          "actual_state": "UNSUPPORTED — required pull_request trigger/check cannot be enforced on this private GitHub Free repository; APIs return 403",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "unsupported"
+        }
+      ]
+    },
+    {
+      "id": "INT-06",
+      "title": "Añadir `[skip ci]` o equivalente",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038026",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038026/job/89617079927",
+          "commit_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "workflow_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "expected_state": "UNSUPPORTED — a skipped workflow cannot be held pending by a required check on this private GitHub Free repository; APIs return 403",
+          "actual_state": "UNSUPPORTED — a skipped workflow cannot be held pending by a required check on this private GitHub Free repository; APIs return 403",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "unsupported"
+        }
+      ]
+    },
+    {
+      "id": "INT-07",
+      "title": "Modificar baseline en el mismo PR que introduce la vuln",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-08",
+      "title": "Modificar policy/rules en el consumidor",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-09",
+      "title": "Artifact SARIF/JSON ausente o corrupto",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-10",
+      "title": "Reutilizar un artifact de otro SHA",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-11",
+      "title": "Ejecutar un workflow viejo mediante rollback",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-11"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/23"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134710182",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134710182/job/89616144933",
+          "commit_sha": "5f974a5d0d282de124ca030338cb9288a47adf13",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "BLOCK — rollback selects an immutable but unapproved central workflow SHA; dependent tests and security jobs are skipped",
+          "actual_state": "BLOCK — rollback selects an immutable but unapproved central workflow SHA; dependent tests and security jobs are skipped",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "INT-12",
+      "title": "Mismo SHA central produce diferente rule count",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-12"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29888071502",
+          "commit_sha": "919cb67604f903ab427c1161e5b223cee62c975e",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "INT-13",
+      "title": "Action basada en Node deprecado o incompatible",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-13"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "integrity_snapshot",
+        "path": "policy-pack/v1/integrity/cases.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038122",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30135038122/job/89617080518",
+          "commit_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "workflow_sha": "d5319c4ecc9d628e07db13a024e9665d01db60b9",
+          "expected_state": "SCANNER_ERROR — node20 Action runtime is outside the supported node24 set",
+          "actual_state": "SCANNER_ERROR — node20 Action runtime is outside the supported node24 set",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "INT-14",
+      "title": "PR desde fork sin permisos adicionales",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz B — Integridad y bypass del pipeline",
+        "case_id": "INT-14"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/24"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30135205688",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30135205688/job/89617739684",
+          "commit_sha": "14277b4ef0895c5d2e8d5e8b26b0099be879a440",
+          "workflow_sha": "936d3113967798df20d255fb7b4ff74311ec8812",
+          "expected_state": "PASS — private fork pull_request runs with contents:read, upstream secret canary unavailable and repository metadata read-only access confirmed",
+          "actual_state": "PASS — private fork pull_request runs with contents:read, upstream secret canary unavailable and repository metadata read-only access confirmed",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "GL-01",
+      "title": "AWS access key + secret ficticios en archivo nuevo",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "contract"
+      },
+      "implementation": {
+        "type": "decision_fixture",
+        "path": "policy-pack/v1/fixtures/valid/GL-01.json"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/29886570185",
+          "commit_sha": "d5bed01839387e1a0798cedbce2b082efa681804",
+          "result": "passed",
+          "scope": "contract"
+        }
+      ]
+    },
+    {
+      "id": "GL-02",
+      "title": "Secreto añadido y borrado en commit posterior",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/9"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975001242",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975001242/job/89104790087",
+          "commit_sha": "b6069c5c58ec1b9fcbd04d612432933edb156b7e",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551072390",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "GL-03",
+      "title": "Token en archivo renombrado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/10"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975002984",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975002984/job/89104795057",
+          "commit_sha": "96bf0606f02ff300e93359cc09e361741ad98d04",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551072711",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "GL-04",
+      "title": "Secreto codificado en Base64",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/17"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134579878",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134579878/job/89615811325",
+          "commit_sha": "0643a8bbbe2848bc71c089db4246a8b280149a24",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "BLOCK — one-level Base64 decode exposes the fictitious AWS credential pair",
+          "actual_state": "BLOCK — one-level Base64 decode exposes the fictitious AWS credential pair",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "GL-05",
+      "title": "Secreto dividido y concatenado en runtime",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/18"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134580805",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134580805/job/89615818221",
+          "commit_sha": "dc082264d99d2d703e9bcbd442bae4e645e11174",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "PASS_WITH_KNOWN_FN — Gitleaks does not reconstruct credentials concatenated only at runtime",
+          "actual_state": "PASS_WITH_KNOWN_FN — Gitleaks does not reconstruct credentials concatenated only at runtime",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "unsupported"
+        }
+      ]
+    },
+    {
+      "id": "GL-06",
+      "title": "Secreto dentro de ZIP/tar",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/19"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134582046",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134582046/job/89615814180",
+          "commit_sha": "971afc9176f10287ab5803ada7b52ac9fd5bc2ff",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "BLOCK — archive depth 1 exposes the fictitious credential inside the tar fixture",
+          "actual_state": "BLOCK — archive depth 1 exposes the fictitious credential inside the tar fixture",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "GL-07",
+      "title": "Secreto en archivo mayor al límite",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/20"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134583722",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134583722/job/89615824352",
+          "commit_sha": "6829b661c55311f58b27123da76964cf09b4732e",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "BLOCK_NO_SIZE_SKIP — the 11 MiB fixture is scanned with max-target-megabytes=0",
+          "actual_state": "BLOCK_NO_SIZE_SKIP — the 11 MiB fixture is scanned with max-target-megabytes=0",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "GL-08",
+      "title": "Referencia segura `process.env.SECRET`",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/11"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975004318",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975004318/job/89104798805",
+          "commit_sha": "19bc420ee1151d9d4d768ecf40b7dab7109dac53",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8551074320",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "GL-09",
+      "title": "Valor placeholder de documentación",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/12"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975005748",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975005748/job/89104802532",
+          "commit_sha": "ab9c9d9d3efef3d7b83c7e436f1ca5259f9dc7a0",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8551073623",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "GL-10",
+      "title": "`.gitleaksignore` añadido en el mismo PR",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/13"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975007340",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975007340/job/89104807569",
+          "commit_sha": "6f892353a4e9501cfd8a9b74dc2d7a9957cecaea",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551079658",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "GL-11",
+      "title": "`gitleaks:allow` junto al secreto",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-11"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/14"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975008259",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975008259/job/89104810245",
+          "commit_sha": "f1f63980e72151cab95c78028cd51754a7dbd927",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551079048",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "GL-12",
+      "title": "Fingerprint aprobado en base, vigente",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-12"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/27"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30135092077",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30135092077/job/89617252205",
+          "commit_sha": "c75c78373c859ed261f0cd30b0494da9b2a65016",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "WARN — two fictitious findings match active trusted-base fingerprints; owner, expiry and reason are visible",
+          "actual_state": "WARN — two fictitious findings match active trusted-base fingerprints; owner, expiry and reason are visible",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "GL-13",
+      "title": "Fingerprint aprobado pero expirado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-13"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/25"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134757988",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134757988/job/89616310274",
+          "commit_sha": "70368c32d6373023c2fb19d4daa7910b5a218c02",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "POLICY_ERROR — trusted-base exception fingerprints expired on 2026-07-23 and cannot suppress findings",
+          "actual_state": "POLICY_ERROR — trusted-base exception fingerprints expired on 2026-07-23 and cannot suppress findings",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "GL-14",
+      "title": "Output/log",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz C — Gitleaks",
+        "case_id": "GL-14"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/9"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975001242",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/29975001242/job/89104790087",
+          "commit_sha": "b6069c5c58ec1b9fcbd04d612432933edb156b7e",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "REDACTED_ACTIONABLE_BLOCK",
+          "actual_state": "REDACTED_ACTIONABLE_BLOCK",
+          "result": "passed",
+          "artifact_id": "8551072390",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-01",
+      "title": "Query param llega a `Runtime.exec`",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-quarkus/pull/4"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29882822326",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29882822326/job/88807125000",
+          "commit_sha": "dda055edcdb2f55278a07b72f6fbf6c83a3ed78a",
+          "workflow_sha": "e81bb14dbdcac024b92d524ad3ee7edcdae354d8",
+          "expected_state": "BLOCK — JAX-RS query parameter reaches Runtime.exec; CWE-78 and remediation visible",
+          "actual_state": "BLOCK — JAX-RS query parameter reaches Runtime.exec; CWE-78 and remediation visible",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8515414521"
+        }
+      ]
+    },
+    {
+      "id": "SG-02",
+      "title": "`Runtime.exec(\"fixed-command\")` sin input externo",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-quarkus/pull/9"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976270195",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976270195/job/89108568078",
+          "commit_sha": "4a39b07adbf9e79022c7c291d83e9e8edc155448",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8551519649",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-03",
+      "title": "Query param llega a `ProcessBuilder`",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-quarkus/pull/10"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142/job/89108578186",
+          "commit_sha": "37d60a95edb403733bb4033d5a839f787429b6f9",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551520148",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-04",
+      "title": "Wrapper intermedio alrededor del sink",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "documented_tool_limit",
+        "path": "docs/KAN-118-semgrep-policy.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281/job/89614225680",
+          "commit_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "workflow_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "result": "passed",
+          "scope": "platform",
+          "expected_state": "KNOWN_FN_INTRAFILE — Community Edition does not propagate taint through the same-file wrapper fixture; todoruleid prevents false coverage",
+          "actual_state": "KNOWN_FN_INTRAFILE — Community Edition does not propagate taint through the same-file wrapper fixture; todoruleid prevents false coverage",
+          "control_outcome": "unsupported"
+        }
+      ]
+    },
+    {
+      "id": "SG-05",
+      "title": "Source y sink en archivos diferentes",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "documented_tool_limit",
+        "path": "docs/KAN-118-semgrep-policy.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281/job/89614225680",
+          "commit_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "workflow_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "result": "passed",
+          "scope": "platform",
+          "expected_state": "KNOWN_FN_INTERFILE — Community Edition reports zero findings across the split source/sink fixture; limitation is explicit",
+          "actual_state": "KNOWN_FN_INTERFILE — Community Edition reports zero findings across the split source/sink fixture; limitation is explicit",
+          "control_outcome": "unsupported"
+        }
+      ]
+    },
+    {
+      "id": "SG-06",
+      "title": "Input Next.js llega a `dangerouslySetInnerHTML`",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/6"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29882974965",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29882974965/job/88807580826",
+          "commit_sha": "b351c858231c8ac4359ec08fda45b82e6f22c1b3",
+          "workflow_sha": "e81bb14dbdcac024b92d524ad3ee7edcdae354d8",
+          "expected_state": "BLOCK — request-controlled HTML reaches dangerouslySetInnerHTML; CWE-79 and remediation visible",
+          "actual_state": "BLOCK — request-controlled HTML reaches dangerouslySetInnerHTML; CWE-79 and remediation visible",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8515468341"
+        }
+      ]
+    },
+    {
+      "id": "SG-07",
+      "title": "HTML pasa por sanitizador aprobado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/11"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976286319",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976286319/job/89108618065",
+          "commit_sha": "1c3fd1d04151f2c9d21dca2e41d1efeb7d159f1a",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8551528163",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-08",
+      "title": "HTML usa sanitizador falso/no-op",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/12"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976290008",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976290008/job/89108628334",
+          "commit_sha": "3044fab9703b49434c8bd28c9715dc68b9506dc5",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551529887",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-09",
+      "title": "XSS mediante `innerHTML`, `outerHTML` u otro sink definido",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/13"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976292879",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976292879/job/89108636565",
+          "commit_sha": "f1b6c68177fd4b9620a43b198d8b6612ea095037",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551529956",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-10",
+      "title": "Render React normal `{userInput}`",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/14"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976295689",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29976295689/job/89108646499",
+          "commit_sha": "782ce28426bce2af8f9d170352c0e2a667a6f550",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8551531201",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-11",
+      "title": "Comentario `nosemgrep` en finding bloqueante",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-11"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-quarkus/pull/11"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976275270",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976275270/job/89108584909",
+          "commit_sha": "986fa4f74d72cb6fc2c3b29683e74be17c7a2e8a",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8551521596",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-12",
+      "title": "Archivo excluido/generado contiene sink",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-12"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/22"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134778089",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134778089/job/89616358803",
+          "commit_sha": "35661e716dc6fb51e9dab7a6c67a689098f44524",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "WARN — finding under generated/sg12/** remains visible with path, owner, expiry and reason while the blocking scan honors the central exclusion",
+          "actual_state": "WARN — finding under generated/sg12/** remains visible with path, owner, expiry and reason while the blocking scan honors the central exclusion",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "SG-13",
+      "title": "Regla YAML inválida",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-13"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/5"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29882653236",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29882653236/job/88806607643",
+          "commit_sha": "0bf69eb86f6b35d4dce6636de5902a1b6a6ac8d5",
+          "workflow_sha": "6def30ac839c3c0a2957170a289a3f9a37108f24",
+          "expected_state": "POLICY_ERROR — invalid Semgrep YAML exits 7 and is not classified as a vulnerability",
+          "actual_state": "POLICY_ERROR — invalid Semgrep YAML exits 7 and is not classified as a vulnerability",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8515355201"
+        }
+      ]
+    },
+    {
+      "id": "SG-14",
+      "title": "Regla demasiado amplia detecta código seguro",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-14"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "calibration_contract",
+        "path": "docs/KAN-118-semgrep-policy.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29975476710",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29975476710/job/89106213151",
+          "commit_sha": "c32d474e7ca104efd7883b035a7e749d395d3d7e",
+          "workflow_sha": "b454bd8a6797eb83dd0b37ec6de57570d1e251cf",
+          "expected_state": "FALSE_POSITIVE_OBSERVED — broad pattern blocks a fixed command and triggers calibration",
+          "actual_state": "FALSE_POSITIVE_OBSERVED — broad pattern blocks a fixed command and triggers calibration",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8551242469"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976270195",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976270195/job/89108568078",
+          "commit_sha": "4a39b07adbf9e79022c7c291d83e9e8edc155448",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "CALIBRATED_PASS — taint rule ignores fixed command while retaining source-to-sink coverage",
+          "actual_state": "CALIBRATED_PASS — taint rule ignores fixed command while retaining source-to-sink coverage",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8551519649"
+        }
+      ]
+    },
+    {
+      "id": "SG-15",
+      "title": "Variantes sintácticas/alias/import estático",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-15"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "rule_fixture",
+        "path": ".github/actions/semgrep-policy/rules.java"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281/job/89614225680",
+          "commit_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "workflow_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "result": "passed",
+          "scope": "platform",
+          "expected_state": "VARIANTS_DETECTED — direct Runtime.exec, static import getRuntime().exec and ProcessBuilder rule fixtures pass",
+          "actual_state": "VARIANTS_DETECTED — direct Runtime.exec, static import getRuntime().exec and ProcessBuilder rule fixtures pass"
+        }
+      ]
+    },
+    {
+      "id": "SG-16",
+      "title": "Rule ID, CWE, source/sink y fix ausentes del summary",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-16"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-quarkus/pull/10"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142/job/89108578186",
+          "commit_sha": "37d60a95edb403733bb4033d5a839f787429b6f9",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "ACTIONABLE_BLOCK",
+          "actual_state": "ACTIONABLE_BLOCK",
+          "result": "passed",
+          "artifact_id": "8551520148",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "SG-17",
+      "title": "Pruebas unitarias `ruleid`, `ok`, `todoruleid`",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz D — Semgrep y reglas propias",
+        "case_id": "SG-17"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": ".github/workflows/validate-semgrep-policy.yml"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-workflows/actions/runs/30134035281/job/89614225680",
+          "commit_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "workflow_sha": "7dc6eb4db989821cac4842a1ac072336e62913f2",
+          "result": "passed",
+          "scope": "platform",
+          "expected_state": "RULE_TESTS_PASS — Semgrep ruleid, ok and todoruleid expectations all pass on the GitHub runner",
+          "actual_state": "RULE_TESTS_PASS — Semgrep ruleid, ok and todoruleid expectations all pass on the GitHub runner"
+        }
+      ]
+    },
+    {
+      "id": "TF-01",
+      "title": "Dependencia directa Critical/High con fix",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/4"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978037518",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978037518/job/89113871564",
+          "commit_sha": "be051f0f94d949f059a2a637e975f4a82db45f2b",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8552152529",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-02",
+      "title": "Dependencia transitiva Critical/High con fix",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/14"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978044245",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978044245/job/89113891112",
+          "commit_sha": "57de48f6a6c4da6394c1c2cc1f4072f4c36c8505",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8552164179",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-03",
+      "title": "Misma dependencia actualizada a fixed version",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/6"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978039391",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978039391/job/89113876885",
+          "commit_sha": "a282c69eb0349de92dcd8207c305e8fa59613228",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8552157399",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-04",
+      "title": "Manifest con rango pero sin lockfile",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/16"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978031787",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978031787/job/89113855005",
+          "commit_sha": "d26f0f0bc966defb1d8295620acf0dd212e919d8",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "WARN",
+          "actual_state": "WARN",
+          "result": "passed",
+          "artifact_id": "8552146170",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-05",
+      "title": "Eliminar lockfile en el PR",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/17"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978033334",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978033334/job/89113859387",
+          "commit_sha": "47f9318f51923b28bcd6f0590ec8cf07b3d089e2",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8552148427",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-06",
+      "title": "CVE heredada aprobada desde base",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/11"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978040307",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978040307/job/89113879509",
+          "commit_sha": "a1cc092761852d93b806e93c003fd1ed318acd58",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "WARN",
+          "actual_state": "WARN",
+          "result": "passed",
+          "artifact_id": "8552157744",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-07",
+      "title": "Añadir CVE y baseline en el mismo PR",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/13"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978041407",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978041407/job/89113882540",
+          "commit_sha": "ecd307aca2795200a24b933e6f6c7ab9f91d7ad1",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8552158964",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-08",
+      "title": "Mismo CVE afecta otro paquete/target",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/12"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978042788",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978042788/job/89113886295",
+          "commit_sha": "92f3868dc742beb9dd40243c704ab3b517b2c097",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8552163733",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-09",
+      "title": "CVE sin fix y no explotada",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/18"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978034515",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978034515/job/89113863461",
+          "commit_sha": "81fd00e539acbc529b4ade30b8ddb61a697e3c31",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "WARN",
+          "actual_state": "WARN",
+          "result": "passed",
+          "artifact_id": "8552147129",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-10",
+      "title": "CVE sin fix pero KEV/explotación confirmada",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/19"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978036087",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978036087/job/89113867525",
+          "commit_sha": "0e1613c18bdf2e7bb7eb10ea1cb08230126acf65",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8552149386",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-11",
+      "title": "Advisory vendor indica backport/no afectado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-11"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/22"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978110438",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29978110438/job/89114106935",
+          "commit_sha": "4e86e4e9b04d67f3faf71e8788b8270ebf1957b1",
+          "workflow_sha": "e5b9533966f7f617acbe01660fa992afcc246bdb",
+          "expected_state": "WARN_WITH_TRUSTED_VEX",
+          "actual_state": "WARN_WITH_TRUSTED_VEX",
+          "result": "passed",
+          "artifact_id": "8552176316",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-12",
+      "title": "Base de Trivy desactualizada",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-12"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/20"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29977800120",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29977800120/job/89113213187",
+          "commit_sha": "49963caf674eae08f22455124b3e66f1f4fc5777",
+          "workflow_sha": "8562d6f85b5b7b2bdeb44370ec393dc998ac9c12",
+          "expected_state": "SCANNER_ERROR",
+          "actual_state": "SCANNER_ERROR",
+          "result": "passed",
+          "artifact_id": "8552072532",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-13",
+      "title": "DB download/outage/timeout",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-13"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/21"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29977832012",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29977832012/job/89113268749",
+          "commit_sha": "480f73a1a1e4c030582c3790e3c89bf6e42d87a4",
+          "workflow_sha": "585f7dad9e54dd4075e313f3583572e4c98c152b",
+          "expected_state": "SCANNER_ERROR",
+          "actual_state": "SCANNER_ERROR",
+          "result": "passed",
+          "artifact_id": "8552076907",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TF-14",
+      "title": "Summary",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz E — Trivy filesystem/SCA",
+        "case_id": "TF-14"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-spring-boot/pull/14"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978044245",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978044245/job/89113891112",
+          "commit_sha": "57de48f6a6c4da6394c1c2cc1f4072f4c36c8505",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "ACTIONABLE_BLOCK",
+          "actual_state": "ACTIONABLE_BLOCK",
+          "result": "passed",
+          "artifact_id": "8552164179",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-01",
+      "title": "Base image introduce CVE fixable",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/25"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984005235",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984005235/job/89131768451",
+          "commit_sha": "c82a48915b2fef10f5b331ff995da4966b0c6c22",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8554312127",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-02",
+      "title": "Paquete vulnerable instalado en Dockerfile",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/26"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984221619",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984221619/job/89132442040",
+          "commit_sha": "280c3bf59915942f5c7191cd5d21d6be1d1f3eef",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8554395810",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-03",
+      "title": "Paquete vulnerable solo en build stage y ausente del final",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/27"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984236598",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984236598/job/89132486940",
+          "commit_sha": "fae95d836ffee3589a2bb53c95ce28b13da8f291",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "WARN",
+          "actual_state": "WARN",
+          "result": "passed",
+          "artifact_id": "8554400623",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-04",
+      "title": "Imagen final actualizada a versión corregida",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/24"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29983986304",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29983986304/job/89131714351",
+          "commit_sha": "82d7d73500e4e1ac7d0965c78a15e371a34cba8f",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "WARN",
+          "actual_state": "WARN",
+          "result": "passed",
+          "artifact_id": "8554308761",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-05",
+      "title": "Cambio de base después del scan",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/29"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984177605",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984177605/job/89132303275",
+          "commit_sha": "e9e2ce07e4db83166fed706397751fbdaceb6d9b",
+          "workflow_sha": "18849bbb7bd1eaee890c738cb17d483649745761",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8554368022",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-06",
+      "title": "Tag mutable apunta a otro digest",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/30"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984190981",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984190981/job/89132344625",
+          "commit_sha": "39dcf6d2f3676fcdd9a6d9ed7105770caebd31aa",
+          "workflow_sha": "1d75e1f084575b5b854530c66dd6d5f3f0590e47",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8554367725",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-07",
+      "title": "CVE de filesystem ignorada afecta paquete distinto en imagen",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/32"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984246962",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984246962/job/89132519434",
+          "commit_sha": "108e02ce22b1ce6943424cdafa827410ab70a54e",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8554400181",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-08",
+      "title": "Build falla antes del scan",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/28"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984266139",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984266139/job/89132578888",
+          "commit_sha": "2c5970282e5233316cb6f6738d46706b17ccd94d",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "BUILD_ERROR",
+          "actual_state": "BUILD_ERROR",
+          "result": "passed",
+          "artifact_id": "8554390344",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-09",
+      "title": "Scan termina sin JSON/SARIF",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/31"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984201673",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984201673/job/89132378730",
+          "commit_sha": "428fc594986e5cfedecb624af21e9cb9ec1e052d",
+          "workflow_sha": "673b12cab20e53fc283bb7123b05245258283534",
+          "expected_state": "SCANNER_ERROR",
+          "actual_state": "SCANNER_ERROR",
+          "result": "passed",
+          "artifact_id": "8554370656",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-10",
+      "title": "Imagen que se publica no coincide con la escaneada",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/35"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30105715139",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30105715139/job/89522979141",
+          "commit_sha": "3efa37a71c38dc2229539dda4442a4e025b35129",
+          "workflow_sha": "54b3f9bcab79d0a9f6a2a9df4cf9ccbd067bbfb1",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8601550650",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30105692367",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30105692367/job/89522856715",
+          "commit_sha": "c1fc16395c36cd45a012c92f6e8502ff0e2ecdc8",
+          "workflow_sha": "54b3f9bcab79d0a9f6a2a9df4cf9ccbd067bbfb1",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8601534160",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130971663",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130971663/job/89605383755",
+          "commit_sha": "4746be14fee425be331b8c9eec9ce45425bae0b6",
+          "workflow_sha": "8ca4870786fbd4dc09261eb204c9c1dc1912e192",
+          "expected_state": "BLOCK before GCP authentication, publish and GitOps promotion; registry, ArgoCD revision and deployed digest unchanged",
+          "actual_state": "BLOCK before GCP authentication, publish and GitOps promotion; registry, ArgoCD revision and deployed digest unchanged",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "TI-11",
+      "title": "Summary",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz F — Trivy imagen",
+        "case_id": "TI-11"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/25"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984005235",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29984005235/job/89131768451",
+          "commit_sha": "c82a48915b2fef10f5b331ff995da4966b0c6c22",
+          "workflow_sha": "056c7e2e83ac49519b826b3549e668775a4c0387",
+          "expected_state": "ACTIONABLE_BLOCK",
+          "actual_state": "ACTIONABLE_BLOCK",
+          "result": "passed",
+          "artifact_id": "8554312127",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-01",
+      "title": "Test command devuelve éxito sin ejecutar tests",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-01"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/38"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30106778205",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30106778205/job/89526009983",
+          "commit_sha": "daacc666d8e6e23f533e70bfb6014dd7f2ccc439",
+          "workflow_sha": "31bfc3d59422bf4ff35cab3616502ae926d126c3",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8601932676",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30106762727",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30106762727/job/89525958505",
+          "commit_sha": "5c8740eaca616374a8b24ab8561d588e2efa91fc",
+          "workflow_sha": "31bfc3d59422bf4ff35cab3616502ae926d126c3",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8601903716",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-02",
+      "title": "Test marcado skip/todo para ocultar regresión",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-02"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nextjs/pull/43"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108151533",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108151533/job/89530700144",
+          "commit_sha": "3362266f0c454e93f149a0071ac6c2aec6ad1717",
+          "workflow_sha": "a5e1955415648c125020fec02399f526984a4582",
+          "expected_state": "PASS",
+          "actual_state": "PASS",
+          "result": "passed",
+          "artifact_id": "8602501668",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30107878046",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30107878046/job/89529687837",
+          "commit_sha": "35f92242384543e7471627b8eb82e4acb9a9b01f",
+          "workflow_sha": "a5e1955415648c125020fec02399f526984a4582",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8602370562",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108326719",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108326719/job/89531209602",
+          "commit_sha": "92ebcd4a84d6d06f0ca43ea7173f740bc4ec24da",
+          "workflow_sha": "a5e1955415648c125020fec02399f526984a4582",
+          "expected_state": "WARN",
+          "actual_state": "WARN",
+          "result": "passed",
+          "artifact_id": "8602562206",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108120187",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108120187/job/89530511155",
+          "commit_sha": "a3ca8837a39f273d4bfa64e95290dfeacad04b40",
+          "workflow_sha": "a5e1955415648c125020fec02399f526984a4582",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8602464206",
+          "scope": "platform"
+        },
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108813562",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108813562/job/89532835645",
+          "commit_sha": "70b3996c8c0cb191ea2fd53c26f0dbd7128c39fc",
+          "workflow_sha": "a5e1955415648c125020fec02399f526984a4582",
+          "expected_state": "BLOCK",
+          "actual_state": "BLOCK",
+          "result": "passed",
+          "artifact_id": "8603000584",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-03",
+      "title": "Build no produce artifact esperado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-03"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "github_pr_fixture",
+        "path": "https://github.com/Sul4m/devsecops-poc-nestjs/pull/16"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134602192",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30134602192/job/89615867693",
+          "commit_sha": "356eca52032c633777cbcb15dfaf6376c6965ee5",
+          "workflow_sha": "35110566450fddfc8f5f3d6333afc5017d02dc1d",
+          "expected_state": "BLOCK — build exits zero but expected NestJS dist output is missing",
+          "actual_state": "BLOCK — build exits zero but expected NestJS dist output is missing",
+          "result": "passed",
+          "scope": "platform",
+          "control_outcome": "passed"
+        }
+      ]
+    },
+    {
+      "id": "DX-04",
+      "title": "Check rojo por vulnerabilidad",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-04"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142/job/89108578186",
+          "commit_sha": "37d60a95edb403733bb4033d5a839f787429b6f9",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "BLOCK with source, sink, CWE and actionable remediation visible",
+          "actual_state": "BLOCK with source, sink, CWE and actionable remediation visible",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-05",
+      "title": "Check rojo por policy inválida",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-05"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29882653236",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/29882653236/job/88806607643",
+          "commit_sha": "0bf69eb86f6b35d4dce6636de5902a1b6a6ac8d5",
+          "workflow_sha": "6def30ac839c3c0a2957170a289a3f9a37108f24",
+          "expected_state": "POLICY_ERROR — invalid Semgrep YAML exits 7 and is not classified as a vulnerability",
+          "actual_state": "POLICY_ERROR — invalid Semgrep YAML exits 7 and is not classified as a vulnerability",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8515355201"
+        }
+      ]
+    },
+    {
+      "id": "DX-06",
+      "title": "Check rojo por outage",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-06"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130800861",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130800861/job/89604649172",
+          "commit_sha": "4746be14fee425be331b8c9eec9ce45425bae0b6",
+          "workflow_sha": "d2c5b32808c479766a5e5826c74c9ee5d7bf1cca",
+          "expected_state": "SCANNER_ERROR with retry guidance; publish skipped and runtime unchanged",
+          "actual_state": "SCANNER_ERROR with retry guidance; publish skipped and runtime unchanged",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-07",
+      "title": "Check verde",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-07"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130661971",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130661971/job/89604212248",
+          "commit_sha": "4746be14fee425be331b8c9eec9ce45425bae0b6",
+          "workflow_sha": "e2ec7e1e92df3ff334323d053c871fa14be773bb",
+          "expected_state": "PASS with scanner execution, version, targets and zero actionable delta visible",
+          "actual_state": "PASS with scanner execution, version, targets and zero actionable delta visible",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-08",
+      "title": "Warning",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-08"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108326719",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nextjs/actions/runs/30108326719/job/89531209602",
+          "commit_sha": "92ebcd4a84d6d06f0ca43ea7173f740bc4ec24da",
+          "workflow_sha": "a5e1955415648c125020fec02399f526984a4582",
+          "expected_state": "WARN with a green PR outcome and visible annotation",
+          "actual_state": "WARN with a green PR outcome and visible annotation",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-09",
+      "title": "Developer nuevo abre el check sin descargar artifacts",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-09"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-quarkus/actions/runs/29976273142/job/89108578186",
+          "commit_sha": "37d60a95edb403733bb4033d5a839f787429b6f9",
+          "workflow_sha": "109d1c43c9926bcb90ed58074faf0f0ce9b6aa54",
+          "expected_state": "BLOCK understandable from the check summary without downloading artifacts",
+          "actual_state": "BLOCK understandable from the check summary without downloading artifacts",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-10",
+      "title": "Hallazgo tiene varias soluciones",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-10"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "feedback_contract",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978044245",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-spring-boot/actions/runs/29978044245/job/89113891112",
+          "commit_sha": "57de48f6a6c4da6394c1c2cc1f4072f4c36c8505",
+          "workflow_sha": "79b028197b2af2d18a5484b50ac1bb375be4ba48",
+          "expected_state": "BLOCK with safe upgrade guidance, fixed version and advisory link",
+          "actual_state": "BLOCK with safe upgrade guidance, fixed version and advisory link",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-11",
+      "title": "Acción/runtime deprecado",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-11"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": ".github/dependabot.yml"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130661971",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130661971/job/89604212246",
+          "commit_sha": "4746be14fee425be331b8c9eec9ce45425bae0b6",
+          "workflow_sha": "e2ec7e1e92df3ff334323d053c871fa14be773bb",
+          "expected_state": "PASS with Node.js runtime deprecation warning separated from application findings",
+          "actual_state": "PASS with Node.js runtime deprecation warning separated from application findings",
+          "result": "passed",
+          "scope": "platform"
+        }
+      ]
+    },
+    {
+      "id": "DX-12",
+      "title": "Artifact contiene información sensible",
+      "plan_ref": {
+        "document": "docs/KAN-118-adversarial-test-plan.md",
+        "matrix": "Matriz G — Tests, build y experiencia del desarrollador",
+        "case_id": "DX-12"
+      },
+      "status": {
+        "cataloged": true,
+        "implemented": true,
+        "validated": true,
+        "validation_scope": "platform"
+      },
+      "implementation": {
+        "type": "workflow_configuration",
+        "path": "docs/KAN-118-final-visual-validation.md"
+      },
+      "expected_evidence": [
+        "github_actions_run",
+        "commit_sha",
+        "case_id",
+        "workflow_sha",
+        "expected_and_actual_state"
+      ],
+      "evidence": [
+        {
+          "type": "github_actions",
+          "url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130659119",
+          "job_url": "https://github.com/Sul4m/devsecops-poc-nestjs/actions/runs/30130659119/job/89604402659",
+          "commit_sha": "4746be14fee425be331b8c9eec9ce45425bae0b6",
+          "workflow_sha": "8ca4870786fbd4dc09261eb204c9c1dc1912e192",
+          "expected_state": "PASS; promotion evidence artifact inspected with no credentials, tokens or private keys",
+          "actual_state": "PASS; promotion evidence artifact inspected with no credentials, tokens or private keys",
+          "result": "passed",
+          "scope": "platform",
+          "artifact_id": "8610984226"
+        }
+      ]
+    }
+  ]
+}

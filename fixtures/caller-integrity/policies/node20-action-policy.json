@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "assurance_scope": "detection_contract",
+  "configuration_authority": "caller_write_actor",
+  "central_repository": "Sulamtech/devsecops-poc-workflows",
+  "approved_reusable_workflows": [
+    "reusable-caller-integrity.yml",
+    "reusable-gcp-publish.yml",
+    "reusable-image-publish-contract.yml",
+    "reusable-maven-ci.yml",
+    "reusable-node-ci.yml",
+    "reusable-security.yml"
+  ],
+  "approved_actions": {
+    "actions/checkout": [
+      "3d3c42e5aac5ba805825da76410c181273ba90b1"
+    ],
+    "actions/setup-java": [
+      "03ad4de0992f5dab5e18fcb136590ce7c4a0ac95"
+    ],
+    "actions/setup-node": [
+      "820762786026740c76f36085b0efc47a31fe5020"
+    ],
+    "actions/upload-artifact": [
+      "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    ],
+    "aquasecurity/trivy-action": [
+      "ed142fd0673e97e23eac54620cfb913e5ce36c25"
+    ],
+    "example/legacy-action": [
+      "cccccccccccccccccccccccccccccccccccccccc"
+    ]
+  },
+  "approved_action_runtimes": {
+    "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1": "node24",
+    "actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95": "node24",
+    "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020": "node24",
+    "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a": "node24",
+    "aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25": "composite",
+    "example/legacy-action@cccccccccccccccccccccccccccccccccccccccc": "node20"
+  },
+  "approved_central_local_uses": {
+    ".github/workflows/validate-caller-integrity.yml": [
+      "./.github/actions/caller-integrity",
+      "./.github/workflows/reusable-caller-integrity.yml"
+    ]
+  },
+  "guard_workflow": "reusable-caller-integrity.yml",
+  "allowed_permissions": {
+    "contents": "read",
+    "pull-requests": "read"
+  },
+  "approved_privileged_jobs": {
+    ".github/workflows/cd.yml": {
+      "security": {
+        "reusable_workflow": "reusable-security.yml",
+        "permissions": {
+          "contents": "read",
+          "id-token": "write"
+        }
+      },
+      "publish": {
+        "reusable_workflow": "reusable-gcp-publish.yml",
+        "permissions": {
+          "actions": "read",
+          "contents": "write",
+          "id-token": "write"
+        }
+      }
+    }
+  },
+  "baseline_paths_exact": [
+    ".security/.trivyignore"
+  ],
+  "untrusted_policy_paths_exact": [
+    ".semgrep.yml",
+    ".semgrep.yaml",
+    ".gitleaks.toml",
+    ".gitleaksignore"
+  ],
+  "untrusted_policy_path_prefixes": [
+    ".semgrep/",
+    ".security/policy/",
+    ".security/rules/"
+  ]
+}

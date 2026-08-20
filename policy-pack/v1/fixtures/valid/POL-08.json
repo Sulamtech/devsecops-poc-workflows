@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "POL-08",
+  "title": "Expired exception is a policy error",
+  "category": "policy",
+  "observed": { "policy_status": "expired", "scanner_status": "ok", "origin": "introduced", "risk_type": "vulnerability", "severity": "high", "confidence": "high", "exploitable": true, "fix_available": true, "bypass_attempt": false },
+  "expected": { "decision": "POLICY_ERROR", "exit_code": 20, "pr_outcome": "red", "publish_allowed": false, "reason_code": "POLICY_NOT_VALID" },
+  "evidence": { "redacted": true, "required_fields": ["case_id", "base_sha", "head_sha", "decision", "reason", "remediation"] }
+}

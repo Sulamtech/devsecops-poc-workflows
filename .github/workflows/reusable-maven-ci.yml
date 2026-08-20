@@ -1,0 +1,85 @@
+name: reusable-maven-ci
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: Java version
+        required: false
+        type: string
+        default: "21"
+
+permissions: {}
+
+jobs:
+  test:
+    name: maven / verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Configure Java
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          cache: maven
+      - name: Verify with Maven Wrapper
+        run: ./mvnw -B clean verify
+      - name: Enforce executable build output
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          block_missing_output() {
+            local expected="$1"
+            {
+              echo "### Maven build output — \`BLOCK\`"
+              echo
+              echo "Maven returned successfully but no deployable \`${expected}\` was produced."
+              echo
+              echo "**How to fix:** restore the packaging plugin and confirm \`./mvnw clean verify\` emits the executable application artifact."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Maven build output BLOCK::Build succeeded without ${expected}. Restore executable packaging."
+            exit 10
+          }
+
+          if rg -q '<groupId>io\\.quarkus</groupId>' pom.xml; then
+            expected="target/quarkus-app/quarkus-run.jar"
+            [[ -s "$expected" ]] || block_missing_output "$expected"
+            stack="Quarkus"
+          elif rg -q '<groupId>org\\.springframework\\.boot</groupId>' pom.xml; then
+            expected="target executable Spring Boot JAR"
+            executable_jar=""
+            for candidate in target/*.jar; do
+              [[ -f "$candidate" ]] || continue
+              [[ "$candidate" == *.original || "$candidate" == *-sources.jar || "$candidate" == *-javadoc.jar ]] && continue
+              if unzip -l "$candidate" 2>/dev/null | rg -q 'BOOT-INF/|org/springframework/boot/loader/'; then
+                executable_jar="$candidate"
+                break
+              fi
+            done
+            [[ -n "$executable_jar" && -s "$executable_jar" ]] || block_missing_output "$expected"
+            expected="$executable_jar"
+            stack="Spring Boot"
+          else
+            {
+              echo "### Maven build output — \`POLICY_ERROR\`"
+              echo
+              echo "The workflow supports Spring Boot and Quarkus but could not identify either stack in \`pom.xml\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Maven build output POLICY_ERROR::Unsupported packaging contract. Define a trusted artifact rule before deployment."
+            exit 31
+          fi
+
+          {
+            echo "### Maven build output — \`PASS\`"
+            echo
+            echo "- Stack: **${stack}**"
+            echo "- Verified deployable output: \`${expected}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

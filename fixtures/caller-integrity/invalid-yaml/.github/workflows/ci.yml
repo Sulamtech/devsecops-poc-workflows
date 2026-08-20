@@ -1,0 +1,4 @@
+name: invalid
+permissions: [
+jobs:
+  security: {}

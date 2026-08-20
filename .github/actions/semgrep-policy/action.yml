@@ -1,0 +1,17 @@
+name: Materialize trusted Semgrep policy
+description: Copy the policy bundled with this immutable Action revision to a runner-local path
+
+inputs:
+  output-path:
+    description: Absolute destination for the trusted policy
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        OUTPUT_PATH: ${{ inputs.output-path }}
+      run: |
+        set -euo pipefail
+        cp "$GITHUB_ACTION_PATH/rules.yml" "$OUTPUT_PATH"

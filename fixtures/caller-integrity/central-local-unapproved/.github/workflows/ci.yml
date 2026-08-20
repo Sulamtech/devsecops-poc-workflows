@@ -1,0 +1,9 @@
+name: central-local-unapproved
+on: [pull_request]
+permissions:
+  contents: read
+jobs:
+  attacker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./scripts/attacker

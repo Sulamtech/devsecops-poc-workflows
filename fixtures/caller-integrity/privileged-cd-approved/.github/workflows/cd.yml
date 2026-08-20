@@ -1,0 +1,23 @@
+name: approved privileged cd
+on:
+  push:
+    branches: [poc-cd]
+permissions: {}
+jobs:
+  integrity:
+    permissions:
+      contents: read
+    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-caller-integrity.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  security:
+    needs: integrity
+    permissions:
+      contents: read
+      id-token: write
+    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-security.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  publish:
+    needs: [integrity, security]
+    permissions:
+      actions: read
+      contents: write
+      id-token: write
+    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-gcp-publish.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb

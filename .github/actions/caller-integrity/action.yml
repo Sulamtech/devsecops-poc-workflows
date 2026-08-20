@@ -1,0 +1,33 @@
+name: Caller integrity guard
+description: Inspect caller workflows and changed paths without executing consumer code
+
+inputs:
+  changed-files-path:
+    description: NUL-delimited paths changed between trusted base and PR head
+    required: true
+  report-path:
+    description: Destination for the JSON evidence report
+    required: true
+
+outputs:
+  decision:
+    description: PASS, WARN, BLOCK, POLICY_ERROR or SCANNER_ERROR
+    value: ${{ steps.guard.outputs.decision }}
+
+runs:
+  using: composite
+  steps:
+    - id: guard
+      name: Evaluate caller integrity
+      shell: bash
+      env:
+        CHANGED_FILES_PATH: ${{ inputs.changed-files-path }}
+        REPORT_PATH: ${{ inputs.report-path }}
+        CALLER_REPOSITORY: ${{ github.repository }}
+      run: |
+        ruby "$GITHUB_ACTION_PATH/../../../scripts/caller_integrity_guard.rb" \
+          --root "$GITHUB_WORKSPACE" \
+          --changed-files "$CHANGED_FILES_PATH" \
+          --policy "$GITHUB_ACTION_PATH/../../../policy-pack/v1/caller-integrity-policy.json" \
+          --repository "$CALLER_REPOSITORY" \
+          --output "$REPORT_PATH"

@@ -1,0 +1,351 @@
+name: reusable-gcp-publish
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: Artifact containing the exact image approved by the security workflow
+        required: true
+        type: string
+      expected-image-id:
+        description: Immutable Docker image ID approved by Trivy
+        required: true
+        type: string
+      expected-archive-sha256:
+        description: SHA-256 of the approved Docker archive
+        required: true
+        type: string
+      expected-subject-commit:
+        description: Full Git commit represented by the approved image
+        required: true
+        type: string
+      project-id:
+        description: Isolated GCP project
+        required: true
+        type: string
+      region:
+        description: Artifact Registry region
+        required: true
+        type: string
+      repository:
+        description: Artifact Registry repository
+        required: true
+        type: string
+      workload-identity-provider:
+        description: Full Workload Identity Provider resource name
+        required: true
+        type: string
+      service-account:
+        description: Keyless GCP publisher service account
+        required: true
+        type: string
+      gitops-branch:
+        description: Branch watched by ArgoCD
+        required: false
+        default: gitops
+        type: string
+      kustomization-path:
+        description: Digest-only Kustomize file updated after a verified publish
+        required: false
+        default: deploy/canary/kustomization.yaml
+        type: string
+      poc-tamper-candidate:
+        description: PoC-only fault injection that corrupts the candidate after scanner approval
+        required: false
+        default: false
+        type: boolean
+    outputs:
+      image-reference:
+        description: Artifact Registry image pinned by digest
+        value: ${{ jobs.publish.outputs.image-reference }}
+      registry-digest:
+        description: Immutable digest returned by Artifact Registry
+        value: ${{ jobs.publish.outputs.registry-digest }}
+      gitops-commit:
+        description: Commit applied to the ArgoCD source branch
+        value: ${{ jobs.publish.outputs.gitops-commit }}
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Verify, publish, sign and promote exact scanned image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      actions: read
+      contents: write
+      id-token: write
+    outputs:
+      image-reference: ${{ steps.publish.outputs.image_reference }}
+      registry-digest: ${{ steps.publish.outputs.registry_digest }}
+      gitops-commit: ${{ steps.gitops.outputs.gitops_commit }}
+    steps:
+      - name: Validate immutable promotion inputs
+        shell: bash
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact-name }}
+          EXPECTED_IMAGE_ID: ${{ inputs.expected-image-id }}
+          EXPECTED_ARCHIVE_SHA256: ${{ inputs.expected-archive-sha256 }}
+          EXPECTED_SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+          PROJECT_ID: ${{ inputs.project-id }}
+          REGION: ${{ inputs.region }}
+          REPOSITORY: ${{ inputs.repository }}
+          GITOPS_BRANCH: ${{ inputs.gitops-branch }}
+          KUSTOMIZATION_PATH: ${{ inputs.kustomization-path }}
+        run: |
+          set -euo pipefail
+          [[ "$ARTIFACT_NAME" =~ ^trivy-image-candidate-[0-9]+-[0-9]+$ ]]
+          [[ "$EXPECTED_IMAGE_ID" =~ ^sha256:[0-9a-f]{64}$ ]]
+          [[ "$EXPECTED_ARCHIVE_SHA256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$EXPECTED_SUBJECT_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$PROJECT_ID" =~ ^[a-z][a-z0-9-]{4,28}[a-z0-9]$ ]]
+          [[ "$REGION" =~ ^[a-z]+-[a-z]+[0-9]$ ]]
+          [[ "$REPOSITORY" =~ ^[a-z][a-z0-9-]{2,62}$ ]]
+          [[ "$GITOPS_BRANCH" =~ ^[a-zA-Z0-9._/-]+$ && "$GITOPS_BRANCH" != *..* ]]
+          [[ "$KUSTOMIZATION_PATH" == deploy/*/kustomization.yaml && "$KUSTOMIZATION_PATH" != *..* ]]
+      - name: Download exact scanned image candidate
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release-candidate
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: v3.1.2
+      - name: PoC fault — tamper with the approved candidate
+        if: inputs.poc-tamper-candidate
+        shell: bash
+        run: |
+          printf 'poc-tamper-after-approval' >> release-candidate/trivy-image-candidate.tar
+      - name: Verify scanner approval and candidate integrity
+        id: verify
+        shell: bash
+        env:
+          EXPECTED_IMAGE_ID: ${{ inputs.expected-image-id }}
+          EXPECTED_ARCHIVE_SHA256: ${{ inputs.expected-archive-sha256 }}
+          EXPECTED_SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+        run: |
+          set -euo pipefail
+          archive="release-candidate/trivy-image-candidate.tar"
+          manifest="release-candidate/trivy-image-subject.json"
+          bundle="release-candidate/trivy-image-subject.bundle"
+          [[ -s "$archive" && -s "$manifest" && -s "$bundle" ]] || {
+            echo "::error title=Promotion SCANNER_ERROR::The signed scanner evidence is incomplete. Retry CI; do not rebuild the image."
+            exit 30
+          }
+          jq -e . "$manifest" >/dev/null
+          cosign verify-blob \
+            --bundle "$bundle" \
+            --certificate-identity-regexp='^https://github\.com/Sul4m/devsecops-poc-workflows/\.github/workflows/reusable-security\.yml@([0-9a-f]{40}|refs/heads/[A-Za-z0-9._/-]+)$' \
+            --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
+            "$manifest"
+
+          manifest_image_id="$(jq -er '.image_id' "$manifest")"
+          manifest_archive_sha256="$(jq -er '.archive_sha256' "$manifest")"
+          manifest_subject_commit="$(jq -er '.subject_commit' "$manifest")"
+          image_name="$(jq -er '.image_name' "$manifest")"
+          candidate_tag="$(jq -er '.candidate_tag' "$manifest")"
+          actual_archive_sha256="$(sha256sum "$archive" | cut -d ' ' -f1)"
+
+          [[ "$manifest_image_id" == "$EXPECTED_IMAGE_ID" ]] || {
+            echo "::error title=Promotion BLOCK::The signed scanner manifest references a different image ID. Do not publish."
+            exit 10
+          }
+          [[ "$manifest_archive_sha256" == "$EXPECTED_ARCHIVE_SHA256" &&
+             "$actual_archive_sha256" == "$EXPECTED_ARCHIVE_SHA256" ]] || {
+            echo "::error title=Promotion BLOCK::The approved image archive changed after scanning. Restore the exact CI artifact; never rebuild or modify it."
+            exit 10
+          }
+          [[ "$manifest_subject_commit" == "$EXPECTED_SUBJECT_COMMIT" ]] || {
+            echo "::error title=Promotion BLOCK::The approved image belongs to a different commit. Rerun CI for the intended subject."
+            exit 10
+          }
+          [[ "$candidate_tag" == "${image_name}:candidate-${EXPECTED_SUBJECT_COMMIT}" ]]
+          [[ "$image_name" =~ ^[a-z0-9]+([._/-][a-z0-9]+)*$ ]]
+
+          docker load --input "$archive" > docker-load.log
+          loaded_image_id="$(docker image inspect "$candidate_tag" --format '{{.Id}}')"
+          [[ "$loaded_image_id" == "$EXPECTED_IMAGE_ID" ]] || {
+            echo "::error title=Promotion BLOCK::The loaded image differs from the subject approved by Trivy."
+            exit 10
+          }
+          echo "image_name=$image_name" >> "$GITHUB_OUTPUT"
+          echo "candidate_tag=$candidate_tag" >> "$GITHUB_OUTPUT"
+      - name: Authenticate to GCP without a service-account key
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ inputs.workload-identity-provider }}
+          service_account: ${{ inputs.service-account }}
+          token_format: access_token
+          create_credentials_file: true
+          export_environment_variables: true
+      - name: Install gcloud
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+        with:
+          version: ">= 536.0.0"
+      - name: Publish the exact approved image by immutable digest
+        id: publish
+        shell: bash
+        env:
+          PROJECT_ID: ${{ inputs.project-id }}
+          REGION: ${{ inputs.region }}
+          REPOSITORY: ${{ inputs.repository }}
+          IMAGE_NAME: ${{ steps.verify.outputs.image_name }}
+          CANDIDATE_TAG: ${{ steps.verify.outputs.candidate_tag }}
+          EXPECTED_IMAGE_ID: ${{ inputs.expected-image-id }}
+          SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+        run: |
+          set -euo pipefail
+          registry="${REGION}-docker.pkg.dev"
+          destination="${registry}/${PROJECT_ID}/${REPOSITORY}/${IMAGE_NAME}"
+          tagged_ref="${destination}:commit-${SUBJECT_COMMIT}"
+
+          gcloud auth print-access-token |
+            docker login -u oauth2accesstoken --password-stdin "https://${registry}"
+          docker tag "$CANDIDATE_TAG" "$tagged_ref"
+          docker push "$tagged_ref" | tee docker-push.log
+
+          registry_digest="$(awk '/digest: sha256:/ {print $3}' docker-push.log | tail -n 1)"
+          [[ "$registry_digest" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+            echo "::error title=Promotion SCANNER_ERROR::Artifact Registry did not return an immutable digest."
+            exit 30
+          }
+
+          digest_ref="${destination}@${registry_digest}"
+          docker image rm "$tagged_ref" >/dev/null 2>&1 || true
+          docker pull "$digest_ref" | tee docker-pull.log
+          published_image_id="$(docker image inspect "$digest_ref" --format '{{.Id}}')"
+          [[ "$published_image_id" == "$EXPECTED_IMAGE_ID" ]] || {
+            echo "::error title=Promotion BLOCK::Artifact Registry returned a different image than the scanner-approved subject."
+            exit 10
+          }
+
+          echo "image_reference=$digest_ref" >> "$GITHUB_OUTPUT"
+          echo "image_repository=$destination" >> "$GITHUB_OUTPUT"
+          echo "registry_digest=$registry_digest" >> "$GITHUB_OUTPUT"
+      - name: Sign the published digest with the workflow identity
+        shell: bash
+        env:
+          IMAGE_REFERENCE: ${{ steps.publish.outputs.image_reference }}
+        run: |
+          set -euo pipefail
+          identity='^https://github\.com/Sul4m/devsecops-poc-workflows/\.github/workflows/reusable-gcp-publish\.yml@([0-9a-f]{40}|refs/heads/[A-Za-z0-9._/-]+)$'
+          if ! cosign verify \
+            --certificate-identity-regexp="$identity" \
+            --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
+            "$IMAGE_REFERENCE" > cosign-verification.json 2>/dev/null; then
+            cosign sign --yes "$IMAGE_REFERENCE"
+          fi
+          cosign verify \
+            --certificate-identity-regexp="$identity" \
+            --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
+            "$IMAGE_REFERENCE" > cosign-verification.json
+          jq -e 'length > 0' cosign-verification.json >/dev/null
+      - name: Record promotion evidence
+        shell: bash
+        env:
+          IMAGE_REFERENCE: ${{ steps.publish.outputs.image_reference }}
+          EXPECTED_IMAGE_ID: ${{ inputs.expected-image-id }}
+          ARCHIVE_SHA256: ${{ inputs.expected-archive-sha256 }}
+          SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg decision PASS \
+            --arg image_reference "$IMAGE_REFERENCE" \
+            --arg image_id "$EXPECTED_IMAGE_ID" \
+            --arg archive_sha256 "$ARCHIVE_SHA256" \
+            --arg subject_commit "$SUBJECT_COMMIT" \
+            '{
+              schema_version: "1.0.0",
+              decision: $decision,
+              reason: "The exact scanner-approved archive was verified, published by digest, and signed keylessly.",
+              image_reference: $image_reference,
+              image_id: $image_id,
+              archive_sha256: $archive_sha256,
+              subject_commit: $subject_commit,
+              authentication: "GitHub OIDC -> GCP Workload Identity Federation",
+              signing: "Sigstore keyless"
+            }' > promotion-decision.json
+          {
+            echo "### GCP keyless promotion — \`PASS\`"
+            echo
+            echo "- Subject commit: \`$SUBJECT_COMMIT\`"
+            echo "- Scanner-approved image ID: \`$EXPECTED_IMAGE_ID\`"
+            echo "- Published image: \`$IMAGE_REFERENCE\`"
+            echo "- GCP authentication: **Workload Identity Federation; no JSON key**"
+            echo "- Signature: **Sigstore keyless identity verified**"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve promotion evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gcp-promotion-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            release-candidate/trivy-image-subject.json
+            release-candidate/trivy-image-subject.bundle
+            promotion-decision.json
+            cosign-verification.json
+            docker-load.log
+            docker-push.log
+            docker-pull.log
+          if-no-files-found: error
+          retention-days: 1
+      - name: Check out the ArgoCD source branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.gitops-branch }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Promote only the verified digest in Git
+        id: gitops
+        shell: bash
+        env:
+          KUSTOMIZATION_PATH: ${{ inputs.kustomization-path }}
+          IMAGE_REPOSITORY: ${{ steps.publish.outputs.image_repository }}
+          REGISTRY_DIGEST: ${{ steps.publish.outputs.registry_digest }}
+          SUBJECT_COMMIT: ${{ inputs.expected-subject-commit }}
+          GITOPS_BRANCH: ${{ inputs.gitops-branch }}
+        run: |
+          set -euo pipefail
+          python3 - "$KUSTOMIZATION_PATH" "$IMAGE_REPOSITORY" "$REGISTRY_DIGEST" <<'PY'
+          import pathlib
+          import re
+          import sys
+
+          path = pathlib.Path(sys.argv[1])
+          image_repository = sys.argv[2]
+          digest = sys.argv[3]
+          text = path.read_text()
+          text, names = re.subn(
+              r"(?m)^(\s*)newName: .+$",
+              lambda match: f"{match.group(1)}newName: {image_repository}",
+              text,
+          )
+          text, digests = re.subn(
+              r"(?m)^(\s*)digest: sha256:[0-9a-f]{64}$",
+              lambda match: f"{match.group(1)}digest: {digest}",
+              text,
+          )
+          if names != 1 or digests != 1:
+              raise SystemExit(f"POLICY_ERROR: expected exactly one newName and digest, got {names}/{digests}")
+          path.write_text(text)
+          PY
+
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$KUSTOMIZATION_PATH"
+          if git diff --cached --quiet; then
+            gitops_commit="$(git rev-parse HEAD)"
+          else
+            git commit -m "chore(cd): promote ${SUBJECT_COMMIT}"
+            git push origin "HEAD:${GITOPS_BRANCH}"
+            gitops_commit="$(git rev-parse HEAD)"
+          fi
+          echo "gitops_commit=$gitops_commit" >> "$GITHUB_OUTPUT"
+          {
+            echo
+            echo "- ArgoCD source commit: \`$gitops_commit\`"
+            echo "- Promotion target: \`$KUSTOMIZATION_PATH\`"
+          } >> "$GITHUB_STEP_SUMMARY"

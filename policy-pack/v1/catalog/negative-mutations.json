@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "mutations": [
+    { "id": "omitted-id", "operation": "remove", "case_id": "DX-12", "expected_marker": "[CATALOG]" },
+    { "id": "duplicated-id", "operation": "duplicate", "case_id": "POL-01", "expected_marker": "[CATALOG]" },
+    { "id": "unknown-id", "operation": "add_unknown", "case_id": "ZZ-99", "expected_marker": "[CATALOG]" },
+    { "id": "validated-without-evidence", "operation": "clear_evidence", "case_id": "POL-01", "expected_marker": "[CATALOG]" }
+  ]
+}

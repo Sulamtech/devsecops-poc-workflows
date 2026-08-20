@@ -1,0 +1,79 @@
+name: audit-platform-capabilities
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/audit-platform-capabilities.yml"
+      - "scripts/validate_policy_pack.py"
+      - "policy-pack/v1/catalog/cases.json"
+      - "docs/KAN-118-caller-integrity-guard.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  required-check-enforcement:
+    name: platform / required-check enforcement
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Audit rulesets and branch protection
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+
+          request() {
+            local path="$1"
+            local output="$2"
+            curl --silent --show-error \
+              --output "$output" \
+              --write-out '%{http_code}' \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${REPOSITORY}/${path}"
+          }
+
+          rulesets_status="$(request rulesets "$RUNNER_TEMP/rulesets.json")"
+          protection_status="$(request "branches/${DEFAULT_BRANCH}/protection" "$RUNNER_TEMP/protection.json")"
+
+          if [[ "$rulesets_status" == "403" && "$protection_status" == "403" ]]; then
+            message="$(jq -r '.message // "feature unavailable"' "$RUNNER_TEMP/rulesets.json")"
+            {
+              echo '## GitHub enforcement capability — `UNSUPPORTED`'
+              echo
+              echo "- Repository: \`${REPOSITORY}\`"
+              echo "- Default branch: \`${DEFAULT_BRANCH}\`"
+              echo "- Rulesets API: \`HTTP ${rulesets_status}\`"
+              echo "- Branch protection API: \`HTTP ${protection_status}\`"
+              echo "- Platform response: ${message}"
+              echo
+              echo "| Case | Observed control outcome |"
+              echo "|---|---|"
+              echo "| INT-01 | Required security job cannot be enforced on this private GitHub Free repository |"
+              echo "| INT-05 | Required pull-request trigger/check cannot be enforced |"
+              echo "| INT-06 | A skipped workflow cannot be held pending by a required check |"
+              echo
+              echo "**Decision:** evidence collected, but the controls are **not implemented**. KAN-115 remains NO-GO for rollout."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if [[ "$rulesets_status" == "200" || "$protection_status" == "200" ]]; then
+            {
+              echo '## GitHub enforcement capability — `AVAILABLE`'
+              echo
+              echo "The platform exposes rulesets or branch protection. Validate the exact required checks before changing the control outcome to passed."
+              echo "- Rulesets API: \`HTTP ${rulesets_status}\`"
+              echo "- Branch protection API: \`HTTP ${protection_status}\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "::error title=Platform capability SCANNER_ERROR::Unexpected API responses: rulesets=${rulesets_status}, protection=${protection_status}."
+          exit 30

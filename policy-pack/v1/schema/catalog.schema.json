@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/devsecops-policy-pack/v1/catalog.schema.json",
+  "title": "KAN-118 adversarial case catalog",
+  "type": "object",
+  "required": ["schema_version", "plan_document", "cases"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "plan_document": { "const": "docs/KAN-118-adversarial-test-plan.md" },
+    "cases": {
+      "type": "array",
+      "minItems": 92,
+      "maxItems": 92,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "plan_ref", "status", "implementation", "expected_evidence", "evidence"]
+      }
+    }
+  }
+}

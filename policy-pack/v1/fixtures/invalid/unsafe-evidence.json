@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GL-01",
+  "title": "Evidence attempts to retain a raw secret",
+  "category": "gitleaks",
+  "observed": { "policy_status": "valid", "scanner_status": "ok", "origin": "introduced", "risk_type": "secret", "severity": "critical", "confidence": "high", "exploitable": true, "fix_available": false, "bypass_attempt": false },
+  "expected": { "decision": "BLOCK", "exit_code": 10, "pr_outcome": "red", "publish_allowed": false, "reason_code": "CONFIRMED_SECRET" },
+  "evidence": { "redacted": false, "required_fields": ["case_id", "decision"] }
+}

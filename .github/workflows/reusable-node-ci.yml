@@ -1,0 +1,424 @@
+name: reusable-node-ci
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: Node.js major version
+        required: false
+        type: string
+        default: "22"
+      build-output-path:
+        description: Expected build output path; use auto for Next.js or NestJS detection
+        required: false
+        type: string
+        default: "auto"
+
+permissions: {}
+
+jobs:
+  test:
+    name: node / test-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Configure Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run unit tests
+        id: unit_tests
+        continue-on-error: true
+        run: npm test -- --runInBand --json --testLocationInResults --outputFile=unit-test-results.json
+      - name: Enforce unit-test evidence
+        id: unit_evidence
+        shell: bash
+        env:
+          COMMAND_OUTCOME: ${{ steps.unit_tests.outcome }}
+        run: |
+          set -euo pipefail
+          report="unit-test-results.json"
+
+          if [[ ! -s "$report" ]] || ! jq -e '
+            (.numTotalTests | type == "number") and
+            (.numPassedTests | type == "number") and
+            (.numFailedTests | type == "number") and
+            (.numPendingTests | type == "number") and
+            (.numTodoTests | type == "number")
+          ' "$report" >/dev/null; then
+            {
+              echo "### Node unit tests — \`TEST_ERROR\`"
+              echo
+              echo "The test command did not produce valid Jest evidence. A green command without a trustworthy report is not accepted."
+              echo
+              echo "**How to fix:** keep Jest JSON reporting enabled and retry the workflow."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node unit tests TEST_ERROR::Valid Jest JSON evidence was not produced. Retry after restoring the test reporter."
+            exit 30
+          fi
+
+          total="$(jq -r '.numTotalTests' "$report")"
+          passed="$(jq -r '.numPassedTests' "$report")"
+          failed="$(jq -r '.numFailedTests' "$report")"
+          skipped="$(jq -r '.numPendingTests + .numTodoTests' "$report")"
+          echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+
+          if (( total == 0 )); then
+            {
+              echo "### Node unit tests — \`BLOCK\`"
+              echo
+              echo "| Executed | Passed | Failed | Skipped |"
+              echo "| ---: | ---: | ---: | ---: |"
+              echo "| ${total} | ${passed} | ${failed} | ${skipped} |"
+              echo
+              echo "The command returned successfully but executed zero tests."
+              echo
+              echo "**How to fix:** add at least one real unit test and remove \`--passWithNoTests\` or equivalent false-green configuration."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node unit tests BLOCK::Zero tests executed. Add a real unit test and remove passWithNoTests; a successful empty suite is not accepted."
+            exit 10
+          fi
+
+          if [[ "$COMMAND_OUTCOME" != "success" ]] || (( failed > 0 )); then
+            {
+              echo "### Node unit tests — \`TEST_FAILURE\`"
+              echo
+              echo "${failed} of ${total} executed tests failed. Open the **Run unit tests** step for assertion details."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node unit tests failed::${failed} of ${total} tests failed. Review the Run unit tests step."
+            exit 10
+          fi
+
+          {
+            echo "### Node unit tests — \`PASS\`"
+            echo
+            echo "Jest executed ${total} tests: ${passed} passed, ${failed} failed, ${skipped} skipped."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Run end-to-end tests
+        id: e2e_tests
+        continue-on-error: true
+        run: npm run test:e2e -- --runInBand --json --testLocationInResults --outputFile=e2e-test-results.json
+      - name: Enforce end-to-end-test evidence
+        id: e2e_evidence
+        shell: bash
+        env:
+          COMMAND_OUTCOME: ${{ steps.e2e_tests.outcome }}
+        run: |
+          set -euo pipefail
+          report="e2e-test-results.json"
+
+          if [[ ! -s "$report" ]] || ! jq -e '
+            (.numTotalTests | type == "number") and
+            (.numPassedTests | type == "number") and
+            (.numFailedTests | type == "number") and
+            (.numPendingTests | type == "number") and
+            (.numTodoTests | type == "number")
+          ' "$report" >/dev/null; then
+            {
+              echo "### Node end-to-end tests — \`TEST_ERROR\`"
+              echo
+              echo "The test command did not produce valid Jest evidence. A green command without a trustworthy report is not accepted."
+              echo
+              echo "**How to fix:** keep Jest JSON reporting enabled and retry the workflow."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node end-to-end tests TEST_ERROR::Valid Jest JSON evidence was not produced. Retry after restoring the test reporter."
+            exit 30
+          fi
+
+          total="$(jq -r '.numTotalTests' "$report")"
+          passed="$(jq -r '.numPassedTests' "$report")"
+          failed="$(jq -r '.numFailedTests' "$report")"
+          skipped="$(jq -r '.numPendingTests + .numTodoTests' "$report")"
+          echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+
+          if (( total == 0 )); then
+            {
+              echo "### Node end-to-end tests — \`BLOCK\`"
+              echo
+              echo "| Executed | Passed | Failed | Skipped |"
+              echo "| ---: | ---: | ---: | ---: |"
+              echo "| ${total} | ${passed} | ${failed} | ${skipped} |"
+              echo
+              echo "The command returned successfully but executed zero tests."
+              echo
+              echo "**How to fix:** add at least one real end-to-end test and remove \`--passWithNoTests\` or equivalent false-green configuration."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node end-to-end tests BLOCK::Zero tests executed. Add a real end-to-end test and remove passWithNoTests."
+            exit 10
+          fi
+
+          if [[ "$COMMAND_OUTCOME" != "success" ]] || (( failed > 0 )); then
+            {
+              echo "### Node end-to-end tests — \`TEST_FAILURE\`"
+              echo
+              echo "${failed} of ${total} executed tests failed. Open the **Run end-to-end tests** step for assertion details."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node end-to-end tests failed::${failed} of ${total} tests failed. Review the Run end-to-end tests step."
+            exit 10
+          fi
+
+          {
+            echo "### Node end-to-end tests — \`PASS\`"
+            echo
+            echo "Jest executed ${total} tests: ${passed} passed, ${failed} failed, ${skipped} skipped."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Compare skipped tests with trusted base
+        if: ${{ steps.unit_evidence.outputs.skipped != '0' || steps.e2e_evidence.outputs.skipped != '0' }}
+        shell: bash
+        env:
+          TRUSTED_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          TRUSTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+
+          write_test_error() {
+            local reason="$1"
+            jq -n \
+              --arg decision TEST_ERROR \
+              --arg reason "$reason" \
+              --arg base_sha "$TRUSTED_BASE_SHA" \
+              --arg head_sha "$TRUSTED_HEAD_SHA" \
+              '{
+                schema_version: "1.0.0",
+                decision: $decision,
+                reason: $reason,
+                base_sha: $base_sha,
+                head_sha: $head_sha,
+                remediation: "Restore the trusted-base test run and retry. Skipped-test debt cannot be classified without valid base evidence."
+              }' > test-skip-decision.json
+            {
+              echo "### Jest skip/todo delta — \`TEST_ERROR\`"
+              echo
+              echo "$reason"
+              echo
+              echo "**How to fix:** restore the trusted-base test run and retry. This is not a clean test result."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Jest skip delta TEST_ERROR::${reason} Restore trusted-base evidence and retry."
+            exit 30
+          }
+
+          [[ "$TRUSTED_BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || write_test_error "The workflow event did not provide a full trusted base SHA."
+          [[ "$TRUSTED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || write_test_error "The workflow event did not provide a full trusted head SHA."
+          git cat-file -e "${TRUSTED_BASE_SHA}^{commit}" 2>/dev/null || write_test_error "Trusted base commit ${TRUSTED_BASE_SHA} is unavailable."
+
+          base_dir="${RUNNER_TEMP}/trusted-test-base"
+          git worktree add --detach "$base_dir" "$TRUSTED_BASE_SHA" >/dev/null ||
+            write_test_error "The trusted base worktree could not be created."
+
+          (
+            cd "$base_dir"
+            npm ci
+          ) || write_test_error "Dependencies for trusted base ${TRUSTED_BASE_SHA} could not be installed."
+
+          set +e
+          (
+            cd "$base_dir"
+            npm test -- --runInBand --json --testLocationInResults \
+              --outputFile="${GITHUB_WORKSPACE}/base-unit-test-results.json"
+          )
+          base_unit_exit=$?
+          (
+            cd "$base_dir"
+            npm run test:e2e -- --runInBand --json --testLocationInResults \
+              --outputFile="${GITHUB_WORKSPACE}/base-e2e-test-results.json"
+          )
+          base_e2e_exit=$?
+          set -e
+
+          for report in base-unit-test-results.json base-e2e-test-results.json; do
+            [[ -s "$report" ]] || write_test_error "Trusted base did not produce ${report}."
+            jq -e '
+              (.numTotalTests | type == "number") and
+              (.numPendingTests | type == "number") and
+              (.numTodoTests | type == "number") and
+              (.testResults | type == "array")
+            ' "$report" >/dev/null || write_test_error "Trusted-base report ${report} is invalid."
+          done
+
+          jq -s \
+            --arg base_root "$base_dir" \
+            --arg head_root "$GITHUB_WORKSPACE" \
+            --arg base_sha "$TRUSTED_BASE_SHA" \
+            --arg head_sha "$TRUSTED_HEAD_SHA" \
+            --argjson base_unit_exit "$base_unit_exit" \
+            --argjson base_e2e_exit "$base_e2e_exit" \
+            '
+              def skipped($document; $root; $suite):
+                [
+                  $document.testResults[] |
+                  .name as $file |
+                  .assertionResults[] |
+                  select(.status == "pending" or .status == "todo") |
+                  {
+                    suite: $suite,
+                    file: ($file | ltrimstr($root + "/")),
+                    name: .fullName,
+                    status: .status,
+                    line: (.location.line // 1)
+                  }
+                ];
+
+              (skipped(.[0]; $base_root; "unit") + skipped(.[1]; $base_root; "e2e")) as $base |
+              (skipped(.[2]; $head_root; "unit") + skipped(.[3]; $head_root; "e2e")) as $head |
+              [
+                $head[] as $candidate |
+                select(any($base[]; .suite == $candidate.suite and .file == $candidate.file and .name == $candidate.name) | not) |
+                $candidate
+              ] as $introduced |
+              [
+                $head[] as $candidate |
+                select(any($base[]; .suite == $candidate.suite and .file == $candidate.file and .name == $candidate.name)) |
+                $candidate
+              ] as $inherited |
+              {
+                schema_version: "1.0.0",
+                decision: (if ($introduced | length) > 0 then "BLOCK" else "WARN" end),
+                reason: (
+                  if ($introduced | length) > 0
+                  then "\($introduced | length) newly skipped/todo test(s) are absent from the trusted base."
+                  else "All skipped/todo tests are inherited from the trusted base."
+                  end
+                ),
+                base_sha: $base_sha,
+                head_sha: $head_sha,
+                base_command_exit_codes: {unit: $base_unit_exit, e2e: $base_e2e_exit},
+                base_skipped_count: ($base | length),
+                head_skipped_count: ($head | length),
+                introduced: $introduced,
+                inherited: $inherited,
+                owner: "repository maintainers",
+                sla_days: 14,
+                remediation: (
+                  if ($introduced | length) > 0
+                  then "Restore the assertion and fix the regression. If temporary quarantine is unavoidable, obtain an external time-bound exception; the PR cannot approve its own skip."
+                  else "Inherited debt remains nonblocking, owned by repository maintainers, with a 14-day remediation SLA."
+                  end
+                )
+              }
+            ' \
+            base-unit-test-results.json \
+            base-e2e-test-results.json \
+            unit-test-results.json \
+            e2e-test-results.json \
+            > test-skip-decision.json
+
+          decision="$(jq -r '.decision' test-skip-decision.json)"
+          introduced_count="$(jq -r '.introduced | length' test-skip-decision.json)"
+          inherited_count="$(jq -r '.inherited | length' test-skip-decision.json)"
+
+          {
+            echo "### Jest skip/todo delta — \`${decision}\`"
+            echo
+            echo "| Base | HEAD | New | Inherited | Owner | SLA |"
+            echo "| ---: | ---: | ---: | ---: | --- | ---: |"
+            echo "| $(jq -r '.base_skipped_count' test-skip-decision.json) | $(jq -r '.head_skipped_count' test-skip-decision.json) | ${introduced_count} | ${inherited_count} | repository maintainers | 14 days |"
+            echo
+            if (( introduced_count > 0 )); then
+              echo "New skipped/todo tests:"
+              jq -r '.introduced[] | "- `\(.suite)` `\(.file):\(.line)` — \(.name) (`\(.status)`)"' \
+                test-skip-decision.json
+              echo
+              echo "**How to fix:** restore the assertions and fix the regression. A PR cannot approve its own skip."
+            else
+              echo "No new skipped/todo identity was introduced. Inherited debt remains visible and nonblocking for 14 days."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          while IFS= read -r finding; do
+            file="$(jq -r '.file' <<<"$finding")"
+            line="$(jq -r '.line' <<<"$finding")"
+            name="$(jq -r '.name' <<<"$finding")"
+            status="$(jq -r '.status' <<<"$finding")"
+            name="${name//'%'/'%25'}"
+            name="${name//$'\r'/'%0D'}"
+            name="${name//$'\n'/'%0A'}"
+            echo "::error file=${file},line=${line},title=New skipped test::${name} is ${status}. Restore the assertion and fix the regression."
+          done < <(jq -c '.introduced[]' test-skip-decision.json)
+
+          if [[ "$decision" == "BLOCK" ]]; then
+            echo "::error title=Jest skip/todo BLOCK::${introduced_count} new skipped/todo test(s) detected. Restore them; the PR cannot approve its own exception."
+            exit 10
+          fi
+
+          while IFS= read -r finding; do
+            file="$(jq -r '.file' <<<"$finding")"
+            line="$(jq -r '.line' <<<"$finding")"
+            name="$(jq -r '.name' <<<"$finding")"
+            name="${name//'%'/'%25'}"
+            name="${name//$'\r'/'%0D'}"
+            name="${name//$'\n'/'%0A'}"
+            echo "::warning file=${file},line=${line},title=Inherited skipped test::${name}. Owner: repository maintainers; SLA: 14 days."
+          done < <(jq -c '.inherited[]' test-skip-decision.json)
+      - name: Build
+        run: npm run build
+      - name: Enforce expected build output
+        shell: bash
+        env:
+          CONFIGURED_OUTPUT: ${{ inputs.build-output-path }}
+        run: |
+          set -euo pipefail
+
+          block_missing_output() {
+            local expected="$1"
+            local remediation="$2"
+            {
+              echo "### Node build output — \`BLOCK\`"
+              echo
+              echo "The build command succeeded but the expected output \`${expected}\` is missing or empty."
+              echo
+              echo "**How to fix:** ${remediation}"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node build output BLOCK::Build succeeded without ${expected}. ${remediation}"
+            exit 10
+          }
+
+          output="$CONFIGURED_OUTPUT"
+          framework="configured"
+          if [[ "$output" == "auto" ]] && jq -e '
+            ((.dependencies // {}) + (.devDependencies // {})) | has("next")
+          ' package.json >/dev/null; then
+            framework="Next.js"
+            output=".next"
+            [[ -s .next/BUILD_ID ]] ||
+              block_missing_output ".next/BUILD_ID" "Restore the Next.js production build and confirm that npm run build generates a deployable .next directory."
+          elif [[ "$output" == "auto" ]] && jq -e '
+            ((.dependencies // {}) + (.devDependencies // {})) | has("@nestjs/core")
+          ' package.json >/dev/null; then
+            framework="NestJS"
+            output="dist"
+          elif [[ "$output" == "auto" ]]; then
+            {
+              echo "### Node build output — \`POLICY_ERROR\`"
+              echo
+              echo "The workflow could not infer the deployable output for this Node.js stack."
+              echo
+              echo "**How to fix:** pass \`build-output-path\` from the caller."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Node build output POLICY_ERROR::Set build-output-path; a successful command alone is not deployable evidence."
+            exit 31
+          fi
+
+          [[ -d "$output" ]] ||
+            block_missing_output "$output" "Correct the build script or configure build-output-path with the deployable directory."
+          if ! compgen -G "${output}/**" >/dev/null && [[ -z "$(ls -A "$output" 2>/dev/null)" ]]; then
+            block_missing_output "$output" "Ensure the build emits deployable files instead of returning a false-green exit code."
+          fi
+
+          {
+            echo "### Node build output — \`PASS\`"
+            echo
+            echo "- Stack: **${framework}**"
+            echo "- Verified deployable output: \`${output}\`"
+            echo "- Result: directory exists and is non-empty"
+          } >> "$GITHUB_STEP_SUMMARY"

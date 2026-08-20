@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "cases": [
+    { "id": "SAFE-01", "fixture_root": "safe", "changed_files": ["src/example.ts", "src/line\nbreak.ts"], "expected_decision": "PASS", "expected_codes": ["CALLER_INTEGRITY_OK"] },
+    { "id": "GUARD-APPROVED", "fixture_root": "guard-approved", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "PASS", "expected_codes": ["CALLER_INTEGRITY_OK"] },
+    { "id": "GUARD-NOT-APPROVED", "fixture_root": "guard-not-approved", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["WORKFLOW_SHA_NOT_APPROVED"] },
+    { "id": "ALLOWLIST-MISSING", "fixture_root": "safe", "changed_files": ["README.md"], "approved_workflow_shas": null, "expected_decision": "POLICY_ERROR", "expected_codes": ["EXTERNAL_WORKFLOW_ALLOWLIST_INVALID"] },
+    { "id": "INT-02-MUTABLE", "fixture_root": "mutable-ref", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["MUTABLE_WORKFLOW_REF"] },
+    { "id": "INT-02-IDENTITY", "fixture_root": "attacker-workflow", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["UNAPPROVED_REUSABLE_WORKFLOW"] },
+    { "id": "INT-02-ACTION", "fixture_root": "mutable-action", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["MUTABLE_ACTION_REF"] },
+    { "id": "INT-03", "fixture_root": "continue-on-error", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["CONTINUE_ON_ERROR_BYPASS"] },
+    { "id": "INT-04", "fixture_root": "write-permission", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["EXCESSIVE_PERMISSIONS"] },
+    { "id": "CD-PRIVILEGED-APPROVED", "fixture_root": "privileged-cd-approved", "changed_files": [".github/workflows/cd.yml"], "expected_decision": "PASS", "expected_codes": ["CALLER_INTEGRITY_OK"] },
+    { "id": "INT-11-PRIVILEGED-NOT-GATED", "fixture_root": "privileged-cd-not-gated", "changed_files": [".github/workflows/cd.yml"], "expected_decision": "BLOCK", "expected_codes": ["PRIVILEGED_JOB_NOT_GATED"] },
+    { "id": "CD-PRIVILEGED-WRONG-JOB", "fixture_root": "privileged-cd-wrong-job", "changed_files": [".github/workflows/cd.yml"], "expected_decision": "BLOCK", "expected_codes": ["EXCESSIVE_PERMISSIONS"] },
+    { "id": "INT-07", "fixture_root": "baseline-and-code", "changed_files": [".security/.trivyignore", "src/vulnerable-example.ts"], "expected_decision": "BLOCK", "expected_codes": ["BASELINE_AND_CHANGE_SAME_PR"] },
+    { "id": "INT-08-DEEP-DELETE", "fixture_root": "local-policy", "changed_files": [".semgrep/nested/deep/deleted-rule.yml"], "expected_decision": "BLOCK", "expected_codes": ["LOCAL_POLICY_OVERRIDE"] },
+    { "id": "TYPE-CHANGE", "fixture_root": "safe", "changed_files": [".security/.trivyignore", "src/type-changed.ts"], "expected_decision": "BLOCK", "expected_codes": ["BASELINE_AND_CHANGE_SAME_PR"] },
+    { "id": "SYMLINK", "fixture_root": "symlink", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["WORKFLOW_SYMLINK"] },
+    { "id": "CENTRAL-LOCAL-USE-NOT-APPROVED", "fixture_root": "central-local-unapproved", "repository": "Sulamtech/devsecops-poc-workflows", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "BLOCK", "expected_codes": ["LOCAL_USE_NOT_APPROVED"] },
+    { "id": "POLICY-ERROR-PRESERVES-BLOCK", "fixture_root": "invalid-yaml", "changed_files": [".semgrep/nested/deep/rules.yml"], "expected_decision": "POLICY_ERROR", "expected_codes": ["UNREADABLE_WORKFLOW_YAML", "LOCAL_POLICY_OVERRIDE"] },
+    { "id": "INT-13-NODE20", "fixture_root": "node20-action", "policy_fixture": "node20-action-policy.json", "changed_files": [".github/workflows/ci.yml"], "expected_decision": "SCANNER_ERROR", "expected_codes": ["ACTION_RUNTIME_UNSUPPORTED"] },
+    { "id": "SCANNER-ERROR", "fixture_root": "missing-root", "changed_files": [], "expected_decision": "SCANNER_ERROR", "expected_codes": ["GUARD_RUNTIME_ERROR"] }
+  ]
+}

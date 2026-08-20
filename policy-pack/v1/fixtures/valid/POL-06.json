@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "POL-06",
+  "title": "Controlled sink is not an automatic blocker",
+  "category": "policy",
+  "observed": { "policy_status": "valid", "scanner_status": "ok", "origin": "none", "risk_type": "none", "severity": "none", "confidence": "none", "exploitable": false, "fix_available": false, "bypass_attempt": false },
+  "expected": { "decision": "PASS", "exit_code": 0, "pr_outcome": "green", "publish_allowed": true, "reason_code": "NO_ACTIONABLE_RISK" },
+  "evidence": { "redacted": true, "required_fields": ["case_id", "workflow_sha", "scanner_version", "decision", "reason"] }
+}

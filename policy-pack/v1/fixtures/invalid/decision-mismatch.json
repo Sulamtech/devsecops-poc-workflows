@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "id": "POL-04",
+  "title": "Actionable regression incorrectly allowed",
+  "category": "policy",
+  "observed": { "policy_status": "valid", "scanner_status": "ok", "origin": "introduced", "risk_type": "vulnerability", "severity": "critical", "confidence": "high", "exploitable": true, "fix_available": true, "bypass_attempt": false },
+  "expected": { "decision": "PASS", "exit_code": 0, "pr_outcome": "green", "publish_allowed": true, "reason_code": "NO_ACTIONABLE_RISK" },
+  "evidence": { "redacted": true, "required_fields": ["case_id", "decision"] }
+}

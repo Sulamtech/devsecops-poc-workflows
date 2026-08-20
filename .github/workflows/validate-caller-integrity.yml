@@ -1,0 +1,67 @@
+name: validate-caller-integrity
+
+on:
+  pull_request:
+    paths:
+      - "scripts/caller_integrity_guard.rb"
+      - "scripts/validate_caller_integrity_fixtures.rb"
+      - ".github/actions/caller-integrity/**"
+      - "fixtures/caller-integrity/**"
+      - "policy-pack/v1/caller-integrity-policy.json"
+      - ".github/workflows/reusable-caller-integrity.yml"
+      - ".github/workflows/validate-caller-integrity.yml"
+      - "docs/KAN-118-caller-integrity-guard.md"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/caller_integrity_guard.rb"
+      - "scripts/validate_caller_integrity_fixtures.rb"
+      - ".github/actions/caller-integrity/**"
+      - "fixtures/caller-integrity/**"
+      - "policy-pack/v1/caller-integrity-policy.json"
+      - ".github/workflows/reusable-caller-integrity.yml"
+      - ".github/workflows/validate-caller-integrity.yml"
+      - "docs/KAN-118-caller-integrity-guard.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: caller integrity fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout trusted test branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate caller integrity contract
+        shell: bash
+        run: ruby scripts/validate_caller_integrity_fixtures.rb
+
+  action-smoke:
+    name: caller integrity action smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout trusted test branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Prepare safe changed-path input
+        shell: bash
+        run: printf '%s\0' 'README.md' > "$RUNNER_TEMP/caller-integrity-changed-files.txt"
+      - name: Exercise composite Action from this commit
+        uses: ./.github/actions/caller-integrity
+        env:
+          DEVSECOPS_APPROVED_WORKFLOW_SHAS: ${{ vars.DEVSECOPS_APPROVED_WORKFLOW_SHAS }}
+        with:
+          changed-files-path: ${{ runner.temp }}/caller-integrity-changed-files.txt
+          report-path: ${{ runner.temp }}/caller-integrity-report.json
+
+  reusable-end-to-end:
+    name: reusable guard PR diff end-to-end
+    uses: ./.github/workflows/reusable-caller-integrity.yml

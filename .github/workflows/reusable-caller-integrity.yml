@@ -1,0 +1,88 @@
+name: reusable-caller-integrity
+
+on:
+  workflow_call:
+    outputs:
+      decision:
+        description: PASS, WARN, BLOCK, POLICY_ERROR or SCANNER_ERROR
+        value: ${{ jobs.guard.outputs.decision }}
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: integrity / caller-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      decision: ${{ steps.guard.outputs.decision }}
+    steps:
+      - name: Checkout caller as untrusted data
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: diff
+        name: Resolve changed paths from trusted base
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -u -o pipefail
+          changed_files="$RUNNER_TEMP/caller-integrity-changed-files.txt"
+          report="$RUNNER_TEMP/caller-integrity-report.json"
+          technical_error() {
+            local code="$1"
+            local message="$2"
+            local remediation="$3"
+            printf '{"schema_version":"1.0.0","decision":"SCANNER_ERROR","findings":[{"decision":"SCANNER_ERROR","code":"%s","file":null,"message":"%s","remediation":"%s"}],"platform_limits":[]}\n' \
+              "$code" "$message" "$remediation" > "$report"
+            {
+              echo '## Caller integrity — `SCANNER_ERROR`'
+              echo
+              echo "- **$code**: $message"
+              echo "  - Remediation: $remediation"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::$code%3A $message $remediation"
+            exit 1
+          }
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ ! "$DEFAULT_BRANCH" =~ ^[A-Za-z0-9._/-]+$ || "$DEFAULT_BRANCH" == *..* ]]; then
+              technical_error "TRUSTED_DEFAULT_BRANCH_INVALID" "The repository default branch was not safe to resolve." "Correct the repository default branch before manual publish/deploy."
+            fi
+            if ! BASE_SHA=$(git rev-parse --verify "origin/${DEFAULT_BRANCH}^{commit}"); then
+              technical_error "TRUSTED_DEFAULT_BRANCH_UNAVAILABLE" "The repository default branch commit was unavailable." "Retry with complete history; do not publish or deploy."
+            fi
+          fi
+          if [[ ! "$BASE_SHA" =~ ^[0-9a-f]{40}$ || "$BASE_SHA" == "0000000000000000000000000000000000000000" || ! "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            technical_error "TRUSTED_DIFF_UNAVAILABLE" "A trusted base/head SHA was not available." "Run from pull_request or a push with complete history before publish/deploy."
+          fi
+          if ! git cat-file -e "$BASE_SHA^{commit}" || ! git cat-file -e "$HEAD_SHA^{commit}"; then
+            technical_error "TRUSTED_COMMIT_UNAVAILABLE" "The trusted base/head commit is absent from checkout." "Retry after fetching complete history; do not publish or deploy."
+          fi
+          diff_base="$BASE_SHA"
+          if [[ "$EVENT_NAME" == "pull_request" || "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            if ! diff_base=$(git merge-base "$BASE_SHA" "$HEAD_SHA"); then
+              technical_error "MERGE_BASE_UNAVAILABLE" "The trusted merge-base could not be resolved." "Fetch complete history and retry; do not infer a partial change set."
+            fi
+          fi
+          if ! git diff --name-only -z --diff-filter=ACMRTD "$diff_base" "$HEAD_SHA" > "$changed_files"; then
+            technical_error "TRUSTED_DIFF_FAILED" "Git could not produce the complete caller change set." "Retry with complete history; do not publish or deploy from a partial diff."
+          fi
+
+      - id: guard
+        name: Evaluate caller integrity contract
+        uses: Sul4m/devsecops-poc-workflows/.github/actions/caller-integrity@46333175cc9ab509d9f65ec31c0095d9c81635ff
+        env:
+          DEVSECOPS_APPROVED_WORKFLOW_SHAS: ${{ vars.DEVSECOPS_APPROVED_WORKFLOW_SHAS }}
+        with:
+          changed-files-path: ${{ runner.temp }}/caller-integrity-changed-files.txt
+          report-path: ${{ runner.temp }}/caller-integrity-report.json
