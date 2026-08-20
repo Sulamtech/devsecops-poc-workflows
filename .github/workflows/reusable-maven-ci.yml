@@ -49,17 +49,17 @@ jobs:
             exit 10
           }
 
-          if rg -q '<groupId>io\\.quarkus</groupId>' pom.xml; then
+          if grep -Eq '<groupId>io\\.quarkus</groupId>' pom.xml; then
             expected="target/quarkus-app/quarkus-run.jar"
             [[ -s "$expected" ]] || block_missing_output "$expected"
             stack="Quarkus"
-          elif rg -q '<groupId>org\\.springframework\\.boot</groupId>' pom.xml; then
+          elif grep -Eq '<groupId>org\\.springframework\\.boot</groupId>' pom.xml; then
             expected="target executable Spring Boot JAR"
             executable_jar=""
             for candidate in target/*.jar; do
               [[ -f "$candidate" ]] || continue
               [[ "$candidate" == *.original || "$candidate" == *-sources.jar || "$candidate" == *-javadoc.jar ]] && continue
-              if unzip -l "$candidate" 2>/dev/null | rg -q 'BOOT-INF/|org/springframework/boot/loader/'; then
+              if unzip -l "$candidate" 2>/dev/null | grep -Eq 'BOOT-INF/|org/springframework/boot/loader/'; then
                 executable_jar="$candidate"
                 break
               fi
