@@ -80,7 +80,7 @@ jobs:
 
       - id: guard
         name: Evaluate caller integrity contract
-        uses: Sulamtech/devsecops-poc-workflows/.github/actions/caller-integrity@3124a85618ad08603303ada418aa0f9a171b042a
+        uses: Sulamtech/devsecops-poc-workflows/.github/actions/caller-integrity@e997dddde167243798d03d1a24c50bba6750b90c
         env:
           DEVSECOPS_APPROVED_WORKFLOW_SHAS: ${{ vars.DEVSECOPS_APPROVED_WORKFLOW_SHAS }}
         with:
