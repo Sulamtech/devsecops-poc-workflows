@@ -1,0 +1,64 @@
+name: reusable-pr-governance
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  governance:
+    name: pr-governance
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - name: Validate issue, label, and branch contract
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) core.setFailed('PR metadata is unavailable.');
+
+            const branchPattern = /^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)\/[a-z0-9._-]+$/;
+            if (!branchPattern.test(pr.head.ref)) {
+              core.setFailed(`Branch ${pr.head.ref} does not match the approved type/description convention.`);
+              return;
+            }
+
+            const typeLabels = pr.labels.map(({name}) => name).filter((name) => name.startsWith('type:'));
+            if (typeLabels.length !== 1) {
+              core.setFailed(`Exactly one type:* label is required; found ${typeLabels.length}.`);
+              return;
+            }
+
+            const match = (pr.body || '').match(/(?:closes|fixes|resolves)\s+#(\d+)/i);
+            if (!match) {
+              core.setFailed('The PR body must link one approved issue with Closes/Fixes/Resolves #N.');
+              return;
+            }
+
+            const issueNumber = Number(match[1]);
+            const {data: issue} = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+            });
+            const approved = issue.labels.some((label) => (typeof label === 'string' ? label : label.name) === 'status:approved');
+            if (!approved) {
+              core.setFailed(`Issue #${issueNumber} is not labeled status:approved.`);
+              return;
+            }
+
+            core.summary
+              .addHeading('PR governance — PASS')
+              .addTable([
+                [{data: 'Control', header: true}, {data: 'Evidence', header: true}],
+                ['Branch', pr.head.ref],
+                ['Approved issue', `#${issueNumber}`],
+                ['Type', typeLabels[0]],
+              ]);
+            await core.summary.write();

@@ -1,0 +1,52 @@
+name: central-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: governance / contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact subject
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate policy pack
+        run: python3 scripts/validate_policy_pack.py
+      - name: Validate caller integrity fixtures
+        run: ruby scripts/validate_caller_integrity_fixtures.rb
+      - name: Validate immutable workflow references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          mutable = []
+          for path in Path('.github/workflows').glob('*.y*ml'):
+              for line_number, line in enumerate(path.read_text().splitlines(), 1):
+                  match = re.search(r'\buses:\s+([^\s]+)@([^\s#]+)', line)
+                  if not match:
+                      continue
+                  owner_path, ref = match.groups()
+                  if owner_path.startswith('./'):
+                      continue
+                  if not re.fullmatch(r'[0-9a-f]{40}', ref):
+                      mutable.append(f'{path}:{line_number}: {owner_path}@{ref}')
+          if mutable:
+              raise SystemExit('Mutable action/workflow references:\n' + '\n'.join(mutable))
+          PY
