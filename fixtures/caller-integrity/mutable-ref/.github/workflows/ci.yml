@@ -4,4 +4,4 @@ permissions:
   contents: read
 jobs:
   security:
-    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-security.yml@main
+    uses: Sulamtech/devsecops-poc-workflows/.github/workflows/reusable-security.yml@main

@@ -9,4 +9,4 @@ jobs:
       actions: read
       contents: write
       id-token: write
-    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-gcp-publish.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    uses: Sulamtech/devsecops-poc-workflows/.github/workflows/reusable-gcp-publish.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb

@@ -4,10 +4,10 @@ permissions:
   contents: read
 jobs:
   integrity:
-    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-caller-integrity.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    uses: Sulamtech/devsecops-poc-workflows/.github/workflows/reusable-caller-integrity.yml@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
   security:
     needs: integrity
-    uses: Sul4m/devsecops-poc-workflows/.github/workflows/reusable-security.yml@e81bb14dbdcac024b92d524ad3ee7edcdae354d8
+    uses: Sulamtech/devsecops-poc-workflows/.github/workflows/reusable-security.yml@e81bb14dbdcac024b92d524ad3ee7edcdae354d8
   metadata:
     runs-on: ubuntu-latest
     steps:
