@@ -48,11 +48,12 @@ jobs:
             const decision = pass ? 'PASS' : 'BLOCK';
             const icon = pass ? '✅' : '⛔';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const evaluatedSha = context.payload.pull_request?.head.sha ?? context.sha;
             const rows = Object.entries(results)
               .map(([name, result]) => `| ${name} | \`${result}\` |`)
               .join('\n');
             const prompt = pass ? '' : `\n\n### Prompt sugerido para tu agente\n\n> Revisa los checks fallidos de este PR y su evidencia exacta. Valida si la remediación sugerida es correcta para este repositorio; no la trates como fuente absoluta. Investiga versiones seguras vigentes, compatibilidad, advisories y tests afectados. Propón el cambio mínimo seguro, explica los trade-offs y ejecuta las pruebas antes de modificar código.`;
-            const body = `${marker}\n## ${icon} DevSecOps — ${decision}\n\nCommit evaluado: \`${context.sha}\`\n\n| Control | Resultado |\n| --- | --- |\n${rows}\n\n[Evidencia completa del workflow](${runUrl})\n\nLa decisión la produce la policy determinista. La IA puede explicar o proponer, pero no aprueba, no hace merge y no despliega.${prompt}`;
+            const body = `${marker}\n## ${icon} DevSecOps — ${decision}\n\nCommit evaluado: \`${evaluatedSha}\`\n\n| Control | Resultado |\n| --- | --- |\n${rows}\n\n[Evidencia completa del workflow](${runUrl})\n\nEste resumen proviene de los checks CI. La decisión autoritativa del control plane se mostrará cuando el triage quede conectado. La IA puede explicar o proponer, pero no aprueba, no hace merge y no despliega.${prompt}`;
 
             const issueNumber = context.issue.number;
             const comments = await github.paginate(github.rest.issues.listComments, {
