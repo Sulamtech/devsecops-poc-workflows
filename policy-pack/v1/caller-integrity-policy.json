@@ -9,21 +9,37 @@
     "reusable-image-publish-contract.yml",
     "reusable-maven-ci.yml",
     "reusable-node-ci.yml",
+    "reusable-pr-feedback.yml",
+    "reusable-pr-governance.yml",
     "reusable-security.yml"
   ],
   "approved_actions": {
-    "actions/checkout": ["3d3c42e5aac5ba805825da76410c181273ba90b1"],
-    "actions/setup-java": ["03ad4de0992f5dab5e18fcb136590ce7c4a0ac95"],
-    "actions/setup-node": ["820762786026740c76f36085b0efc47a31fe5020"],
-    "actions/upload-artifact": ["043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"],
-    "aquasecurity/trivy-action": ["ed142fd0673e97e23eac54620cfb913e5ce36c25"]
+    "actions/checkout": [
+      "3d3c42e5aac5ba805825da76410c181273ba90b1"
+    ],
+    "actions/setup-java": [
+      "03ad4de0992f5dab5e18fcb136590ce7c4a0ac95"
+    ],
+    "actions/setup-node": [
+      "820762786026740c76f36085b0efc47a31fe5020"
+    ],
+    "actions/upload-artifact": [
+      "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    ],
+    "aquasecurity/trivy-action": [
+      "ed142fd0673e97e23eac54620cfb913e5ce36c25"
+    ],
+    "actions/github-script": [
+      "3a2844b7e9c422d3c10d287c895573f7108da1b3"
+    ]
   },
   "approved_action_runtimes": {
     "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1": "node24",
     "actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95": "node24",
     "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020": "node24",
     "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a": "node24",
-    "aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25": "composite"
+    "aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25": "composite",
+    "actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3": "node24"
   },
   "approved_central_local_uses": {
     ".github/workflows/validate-caller-integrity.yml": [
@@ -44,6 +60,13 @@
           "contents": "read",
           "pull-requests": "read",
           "id-token": "write"
+        }
+      },
+      "feedback": {
+        "reusable_workflow": "reusable-pr-feedback.yml",
+        "permissions": {
+          "contents": "read",
+          "pull-requests": "write"
         }
       }
     },
