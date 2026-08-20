@@ -58,8 +58,7 @@
         "reusable_workflow": "reusable-security.yml",
         "permissions": {
           "contents": "read",
-          "pull-requests": "read",
-          "id-token": "write"
+          "pull-requests": "read"
         }
       },
       "feedback": {
@@ -67,6 +66,14 @@
         "permissions": {
           "contents": "read",
           "pull-requests": "write"
+        }
+      },
+      "governance": {
+        "reusable_workflow": "reusable-pr-governance.yml",
+        "permissions": {
+          "contents": "read",
+          "issues": "read",
+          "pull-requests": "read"
         }
       }
     },
