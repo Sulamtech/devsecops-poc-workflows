@@ -137,7 +137,7 @@ jobs:
           jq -e . "$manifest" >/dev/null
           cosign verify-blob \
             --bundle "$bundle" \
-            --certificate-identity-regexp='^https://github\.com/Sul4m/devsecops-poc-workflows/\.github/workflows/reusable-security\.yml@([0-9a-f]{40}|refs/heads/[A-Za-z0-9._/-]+)$' \
+            --certificate-identity-regexp='^https://github\.com/Sulamtech/devsecops-poc-workflows/\.github/workflows/reusable-security\.yml@([0-9a-f]{40}|refs/heads/[A-Za-z0-9._/-]+)$' \
             --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
             "$manifest"
 
@@ -230,7 +230,7 @@ jobs:
           IMAGE_REFERENCE: ${{ steps.publish.outputs.image_reference }}
         run: |
           set -euo pipefail
-          identity='^https://github\.com/Sul4m/devsecops-poc-workflows/\.github/workflows/reusable-gcp-publish\.yml@([0-9a-f]{40}|refs/heads/[A-Za-z0-9._/-]+)$'
+          identity='^https://github\.com/Sulamtech/devsecops-poc-workflows/\.github/workflows/reusable-gcp-publish\.yml@([0-9a-f]{40}|refs/heads/[A-Za-z0-9._/-]+)$'
           if ! cosign verify \
             --certificate-identity-regexp="$identity" \
             --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \

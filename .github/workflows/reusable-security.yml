@@ -374,7 +374,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Materialize trusted Semgrep policy
-        uses: Sul4m/devsecops-poc-workflows/.github/actions/semgrep-policy@597f9ddf69251cf70befebf487157b8ab8948df2
+        uses: Sulamtech/devsecops-poc-workflows/.github/actions/semgrep-policy@a543caef95af9997b07c8e40e68291fa83081e8d
         with:
           output-path: /tmp/semgrep-poc-policy.yml
       - name: Materialize trusted Semgrep exclusions
