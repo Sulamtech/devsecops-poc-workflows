@@ -7,8 +7,11 @@ rules:
     metadata:
       category: security
       cwe: CWE-78
+      vulnerability: OS command injection
       source: JAX-RS @QueryParam
       sink: Runtime.exec or ProcessBuilder
+      attack: An attacker supplies shell metacharacters or unexpected arguments through the HTTP query parameter and reaches operating-system command execution.
+      impact: Arbitrary command execution with the service identity can expose data, alter the host, or enable lateral movement.
       remediation: Map an allowlisted command identifier to fixed executable and argument values; never pass request input to the operating system.
     pattern-sources:
       - patterns:
@@ -32,8 +35,11 @@ rules:
     metadata:
       category: security
       cwe: CWE-79
+      vulnerability: Cross-Site Scripting (XSS)
       source: Component or request-controlled HTML
       sink: React dangerouslySetInnerHTML
+      attack: An attacker supplies HTML with an executable event handler or script-capable payload and convinces a user to open the affected view.
+      impact: JavaScript can run in the application origin, alter the UI, read browser-accessible data, or perform actions with the victim session.
       remediation: Prefer normal JSX interpolation; when raw HTML is unavoidable, pass it through the approved sanitizer before rendering.
     patterns:
       - pattern: '<$TAG ... dangerouslySetInnerHTML={{ __html: $HTML }} ... />'
@@ -51,8 +57,11 @@ rules:
     metadata:
       category: security
       cwe: CWE-79
+      vulnerability: Cross-Site Scripting (XSS)
       source: Function parameter containing untrusted HTML
       sink: Browser element.innerHTML
+      attack: An attacker controls the function input so the browser parses malicious markup and executes an event-handler or equivalent payload.
+      impact: JavaScript can run in the application origin, alter the UI, read browser-accessible data, or perform actions with the victim session.
       remediation: Use textContent for text or pass HTML through the approved sanitizer before assigning it.
     patterns:
       - pattern-inside: |

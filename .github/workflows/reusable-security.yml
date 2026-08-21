@@ -450,7 +450,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Materialize trusted Semgrep policy
-        uses: Sulamtech/devsecops-poc-workflows/.github/actions/semgrep-policy@a543caef95af9997b07c8e40e68291fa83081e8d
+        uses: Sulamtech/devsecops-poc-workflows/.github/actions/semgrep-policy@56c4aa8ca8d903657f51ed396afe9467611cf095
         with:
           output-path: /tmp/semgrep-poc-policy.yml
       - name: Materialize trusted Semgrep exclusions
@@ -664,26 +664,44 @@ jobs:
           {
             echo "### Semgrep delta — \`BLOCK\`"
             echo
-            echo "| Rule | CWE | File | Line | Source | Sink |"
-            echo "|---|---|---|---:|---|---|"
+            echo "A new, blocking source-to-sink security regression was introduced by this PR. Each row below is followed by the concrete attack scenario, impact, and next action."
+            echo
+            echo "| Rule | Security flaw | CWE | File | Line |"
+            echo "|---|---|---|---|---:|"
           } >> "$GITHUB_STEP_SUMMARY"
 
           while IFS= read -r finding; do
             rule="$(jq -r '.check_id // "unknown-rule" | sub("^tmp\\."; "")' <<< "$finding")"
             cwe="$(jq -r '.extra.metadata.cwe // "unclassified"' <<< "$finding")"
+            vulnerability="$(jq -r '.extra.metadata.vulnerability // "Unsafe data flow"' <<< "$finding")"
             file="$(jq -r '.path // "unknown-file"' <<< "$finding")"
             line="$(jq -r '.start.line // 1' <<< "$finding")"
             source="$(jq -r '.extra.metadata.source // "review data origin"' <<< "$finding")"
             sink="$(jq -r '.extra.metadata.sink // "review dangerous operation"' <<< "$finding")"
+            attack="$(jq -r '.extra.metadata.attack // "If an attacker controls the source and the flow is reachable, crafted input can activate the sensitive sink."' <<< "$finding")"
+            impact="$(jq -r '.extra.metadata.impact // "The impact depends on the sensitive operation and must be confirmed in repository context."' <<< "$finding")"
             remediation="$(jq -r '.extra.metadata.remediation // "Remove the unsafe data flow and rerun the PR."' <<< "$finding")"
-            printf '| %s | %s | %s | %s | %s | %s |\n' \
+            printf '| %s | %s | %s | %s | %s |\n' \
               "$(markdown_escape "$rule")" \
+              "$(markdown_escape "$vulnerability")" \
               "$(markdown_escape "$cwe")" \
               "$(markdown_escape "$file")" \
-              "$line" \
-              "$(markdown_escape "$source")" \
-              "$(markdown_escape "$sink")" >> "$GITHUB_STEP_SUMMARY"
-            echo "::error file=$(command_escape "$file"),line=$line,title=Semgrep $(command_escape "$rule")::BLOCK ($cwe): $source reaches $sink. $remediation"
+              "$line" >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo
+              echo "#### $(markdown_escape "$vulnerability") at \`$(markdown_escape "$file"):$line\`"
+              echo
+              echo "- **What failed:** untrusted source \`$(markdown_escape "$source")\` reaches sensitive sink \`$(markdown_escape "$sink")\` without the required protection."
+              echo "- **How it can be exploited:** $(markdown_escape "$attack")"
+              echo "- **Possible impact:** $(markdown_escape "$impact")"
+              echo "- **How to fix:** $(markdown_escape "$remediation")"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "SECURITY BLOCK: $vulnerability ($cwe) at $file:$line" >&2
+            echo "  What failed: untrusted source '$source' reaches sensitive sink '$sink' without the required protection." >&2
+            echo "  Attack scenario: $attack" >&2
+            echo "  Possible impact: $impact" >&2
+            echo "  Remediation: $remediation" >&2
+            echo "::error file=$(command_escape "$file"),line=$line,title=Semgrep $(command_escape "$vulnerability") ($cwe)::BLOCK: $attack Impact: $impact Remediation: $remediation"
           done < <(jq -c '.results[]' semgrep-delta.json)
 
           {
